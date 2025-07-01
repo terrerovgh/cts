@@ -2,9 +2,28 @@
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import Gallery from '../components/Gallery.astro';
+import Servicios from '../components/Servicios.astro';
+import ArtistJuan from '../components/ArtistJuan.astro';
+import ArtistDavid from '../components/ArtistDavid.astro';
+import ArtistNina from '../components/ArtistNina.astro';
+import ArtistKarli from '../components/ArtistKarli.astro';
+import Testimonios from '../components/Testimonios.astro';
+import Contacto from '../components/Contacto.astro';
+import Footer from '../components/Footer.astro';
 ---
 
 <Layout>
   <Hero />
   <Gallery />
+  <Servicios />
+  <section id="tatuadores" class="section bg-black text-white">
+    <h2 class="text-4xl md:text-5xl font-rye font-bold mb-16 text-center">Tatuadores</h2>
+    <ArtistJuan />
+    <ArtistDavid />
+    <ArtistNina />
+    <ArtistKarli />
+  </section>
+  <Testimonios />
+  <Contacto />
+  <Footer />
 </Layout>

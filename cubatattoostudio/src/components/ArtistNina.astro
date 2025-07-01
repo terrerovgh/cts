@@ -1,0 +1,90 @@
+---
+// Props: nombre, video, descripcion, imagenes
+const { nombre = "Nina", video = "https://www.w3schools.com/html/movie.mp4", descripcion = "Trazos finos y minimalismo. 6 años de experiencia.", imagenes = [
+  "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=800&fit=crop",
+  "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=800&fit=crop"
+] } = Astro.props;
+---
+
+<section id="artist-nina" class="section py-24 md:py-36 bg-black text-white relative overflow-hidden">
+  <div class="container mx-auto flex flex-col md:flex-row items-center gap-12">
+    <div class="w-full md:w-1/2 relative">
+      <div class="relative rounded-xl overflow-hidden shadow-lg parallax-bg">
+        <video id="video-nina" class="w-full h-72 object-cover rounded-xl artist-video" src={video} preload="auto" muted playsinline style="pointer-events:none"></video>
+      </div>
+    </div>
+    <div class="w-full md:w-1/2 flex flex-col gap-6">
+      <h2 class="text-3xl md:text-5xl font-rye font-bold fade-in-artist">{nombre}</h2>
+      <p class="text-lg text-gray-300 fade-in-artist">{descripcion}</p>
+      <div class="flex gap-4 mt-4">
+        {imagenes.map(img => (
+          <img src={img} alt={nombre} class="w-28 h-28 object-cover rounded-lg shadow-lg fade-in-artist" loading="lazy" />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
+
+function lerp(a, b, n) { return (1 - n) * a + n * b; }
+
+window.addEventListener('DOMContentLoaded', () => {
+  const video = document.getElementById('video-nina') as HTMLVideoElement | null;
+  let targetTime = 0, currentTime = 0, rafId;
+  function updateVideo() {
+    if (video && typeof video.currentTime === 'number') {
+      currentTime = lerp(currentTime, targetTime, 0.2);
+      video.currentTime = currentTime;
+    }
+    rafId = requestAnimationFrame(updateVideo);
+  }
+  if (video) {
+    video.addEventListener('loadedmetadata', () => {
+      ScrollTrigger.create({
+        trigger: '#artist-nina',
+        start: 'top center',
+        end: 'bottom center',
+        scrub: true,
+        onUpdate: self => {
+          if (video.duration) targetTime = self.progress * video.duration;
+        },
+        onLeave: () => { if (rafId) cancelAnimationFrame(rafId); },
+        onEnterBack: () => { if (rafId) cancelAnimationFrame(rafId); rafId = requestAnimationFrame(updateVideo); }
+      });
+      updateVideo();
+    });
+  }
+
+  // Animaciones de texto e imágenes
+  gsap.utils.toArray('.fade-in-artist').forEach((el, i) => {
+    gsap.fromTo(el as HTMLElement, { opacity: 0, y: 40 }, {
+      opacity: 1, y: 0, duration: 1, delay: i * 0.15, ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '#artist-nina',
+        start: 'top 80%',
+        end: 'top 40%',
+        scrub: true
+      }
+    });
+  });
+  // Parallax fondo
+  gsap.to('.parallax-bg', {
+    yPercent: 20,
+    scrollTrigger: {
+      trigger: '#artist-nina',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true
+    }
+  });
+});
+</script>
+
+<style>
+#artist-nina { position: relative; }
+.artist-video { box-shadow: 0 8px 32px 0 rgba(0,0,0,0.4); }
+</style>

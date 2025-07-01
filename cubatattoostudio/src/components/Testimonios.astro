@@ -1,0 +1,47 @@
+---
+// Props: testimonios (array de objetos {nombre, texto, foto})
+const { testimonios = [
+  { nombre: 'Ana', texto: '¡Increíble experiencia! El estudio es impecable y el resultado superó mis expectativas.', foto: 'https://randomuser.me/api/portraits/women/44.jpg' },
+  { nombre: 'Carlos', texto: 'Profesionales y atentos. Volveré sin duda para mi próximo tatuaje.', foto: 'https://randomuser.me/api/portraits/men/32.jpg' },
+  { nombre: 'Lucía', texto: 'Me sentí segura y escuchada. El diseño quedó perfecto.', foto: 'https://randomuser.me/api/portraits/women/65.jpg' }
+] } = Astro.props;
+---
+
+<section id="testimonios" class="section py-24 md:py-36 bg-gray-50 text-black">
+  <div class="container mx-auto">
+    <h2 class="text-4xl md:text-5xl font-rye font-bold mb-12 text-center">Testimonios</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      {testimonios.map(t => (
+        <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center fade-in-testimonio hover:scale-105 transition-transform duration-300">
+          <span class="text-7xl text-gray-200 mb-4">“</span>
+          <p class="text-lg text-center mb-4 text-gray-800">{t.texto}</p>
+          <div class="flex items-center gap-3 mt-auto">
+            <img src={t.foto} alt={t.nombre} class="w-12 h-12 rounded-full object-cover border-2 border-black" loading="lazy" />
+            <span class="font-semibold text-black">{t.nombre}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
+window.addEventListener('DOMContentLoaded', () => {
+  gsap.utils.toArray('.fade-in-testimonio').forEach((el, i) => {
+    gsap.from(el, {
+      opacity: 0,
+      y: 60,
+      duration: 0.7,
+      delay: i * 0.15,
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',
+        toggleActions: 'play none none none',
+      }
+    });
+  });
+});
+</script>

@@ -1,7 +1,6 @@
 # Cuba Tattoo Studio Website
 
-This repository contains the source code for the Cuba Tattoo Studio website built with [Astro](https://astro.build/), Tailwind CSS and GSAP.
-The project aims for a cinematic one-page experience inspired by GTA VI animations.
+Este repositorio contiene el código fuente de Cuba Tattoo Studio, una web one-page inmersiva construida con [Astro](https://astro.build/), Tailwind CSS y GSAP. El objetivo es lograr una experiencia cinemática inspirada en GTA VI, con animaciones avanzadas, scrubbing de video, parallax y transiciones suaves.
 
 ## Setup
 
@@ -11,17 +10,33 @@ npm install
 npm run dev
 ```
 
-To create a production build and preview it locally:
+Para crear un build de producción y previsualizarlo localmente:
 
 ```bash
 npm run build
 npm run preview
 ```
 
-The site is in early stages. See `cubatattoostudio/CHANGELOG.md` for progress details.
+### Estructura y Modularidad
+- Todas las secciones principales están implementadas como componentes Astro independientes:
+  - Hero, Galería, Servicios, Tatuadores (uno por artista), Testimonios, Contacto, Footer.
+- El layout global gestiona navegación fija, scroll suave y animaciones centralizadas.
+- Para agregar un nuevo artista, crea un componente en `src/components/` siguiendo el patrón de los existentes y añádelo en la sección de Tatuadores en `index.astro`.
+
+### Accesibilidad y Optimización
+- El sitio es responsive y optimizado para móviles.
+- Se han seguido buenas prácticas de accesibilidad (a11y): contraste alto, navegación por teclado, textos alternativos y animaciones adaptadas a `prefers-reduced-motion`.
+- Imágenes y videos usan lazy loading y formatos modernos.
+
+### Animaciones y Experiencia
+- GSAP + ScrollTrigger controlan animaciones de entrada, parallax, scrubbing de video y transiciones globales.
+- El sistema de animaciones es centralizado y fácil de mantener.
+- Se ha añadido una transición global tipo overlay (wipe/fade) entre secciones para una experiencia narrativa más fluida.
+
+### Documentación y Tareas
+- El avance, plan técnico y tasklist están en `/doc/Plan.md`.
+- Cambios y versiones en `cubatattoostudio/CHANGELOG.md`.
 
 ### Assets
 
-Binary media files are not stored in the repository yet. To see the hero video,
-place your own `hero.mp4` file under `cubatattoostudio/public/assets/` before
-running the development server or building the site.
+Los archivos binarios (videos, imágenes) no están en el repo. Coloca tu propio `hero.mp4` en `cubatattoostudio/public/assets/` antes de correr el servidor de desarrollo o build.
