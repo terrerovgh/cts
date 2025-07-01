@@ -196,14 +196,14 @@ const categories = ["Todos", ...new Set(galleryItems.map(item => item.category))
     });
     // Fade-in escalonado de las imágenes
     gsap.utils.toArray('.gallery-item').forEach((item, i) => {
-      gsap.from(item, {
+      gsap.from(item as HTMLElement, {
         opacity: 0,
         y: 60,
         duration: 1,
         delay: i * 0.08,
         ease: 'power2.out',
         scrollTrigger: {
-          trigger: item,
+          trigger: item as HTMLElement,
           start: 'top 90%',
           end: 'top 60%',
           scrub: true

@@ -31,13 +31,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 window.addEventListener('DOMContentLoaded', () => {
   gsap.utils.toArray('.fade-in-servicio').forEach((el, i) => {
-    gsap.from(el, {
+    gsap.from(el as Element, {
       opacity: 0,
       y: 60,
       duration: 0.7,
       delay: i * 0.15,
       scrollTrigger: {
-        trigger: el,
+        trigger: el as Element,
         start: 'top 80%',
         toggleActions: 'play none none none',
       }
