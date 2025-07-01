@@ -1,0 +1,137 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = "Cuba Tattoo Studio", description = "Arte en la piel, contado en cada trazo" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    
+    <!-- Meta tags para SEO -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    
+    <!-- Google Fonts: Rye para encabezados -->
+    <link href="https://fonts.googleapis.com/css2?family=Rye&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-black text-white scroll-smooth overflow-x-hidden">
+    <!-- Header de navegación fijo -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-md border-b border-white/10">
+      <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="#hero" class="flex items-center gap-3" aria-label="Ir al inicio">
+          <img src="/assets/logo.png" alt="Logo Cuba Tattoo Studio" class="h-10 w-auto drop-shadow-lg" style="max-width:48px;" />
+          <span class="text-2xl font-bold tracking-wider sr-only">CUBA TATTOO STUDIO</span>
+        </a>
+        <nav class="hidden md:block">
+          <ul class="flex space-x-8 text-sm uppercase tracking-wide">
+            <li><a href="#galeria" class="hover:text-gray-300 transition-colors">Galería</a></li>
+            <li><a href="#servicios" class="hover:text-gray-300 transition-colors">Servicios</a></li>
+            <li><a href="#tatuadores" class="hover:text-gray-300 transition-colors">Tatuadores</a></li>
+            <li><a href="#testimonios" class="hover:text-gray-300 transition-colors">Testimonios</a></li>
+            <li><a href="#contacto" class="hover:text-gray-300 transition-colors">Contacto</a></li>
+          </ul>
+        </nav>
+        
+        <!-- Menú móvil hamburguesa -->
+        <button id="mobile-menu-btn" class="md:hidden" aria-label="Abrir menú de navegación">
+          <div class="space-y-1">
+            <div class="w-6 h-0.5 bg-white"></div>
+            <div class="w-6 h-0.5 bg-white"></div>
+            <div class="w-6 h-0.5 bg-white"></div>
+          </div>
+        </button>
+      </div>
+    </header>
+
+    <!-- Menú móvil -->
+    <nav id="mobile-menu" class="fixed top-0 left-0 right-0 bg-black z-30 transform -translate-y-full transition-transform md:hidden">
+      <div class="pt-20 pb-8 px-6">
+        <ul class="space-y-6 text-center">
+          <li><a href="#galeria" class="block text-xl hover:text-gray-300">Galería</a></li>
+          <li><a href="#servicios" class="block text-xl hover:text-gray-300">Servicios</a></li>
+          <li><a href="#tatuadores" class="block text-xl hover:text-gray-300">Tatuadores</a></li>
+          <li><a href="#testimonios" class="block text-xl hover:text-gray-300">Testimonios</a></li>
+          <li><a href="#contacto" class="block text-xl hover:text-gray-300">Contacto</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main>
+      <div class="viewport-wrapper">
+        <div class="content-scroll">
+          <slot />
+        </div>
+      </div>
+    </main>
+
+    <!-- Scripts básicos -->
+    <script>
+      // Menú móvil
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      mobileMenuBtn?.addEventListener('click', () => {
+        mobileMenu?.classList.toggle('-translate-y-full');
+      });
+
+      // Cerrar menú al hacer clic en un enlace
+      const mobileLinks = mobileMenu?.querySelectorAll('a');
+      mobileLinks?.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu?.classList.add('-translate-y-full');
+        });
+      });
+    </script>
+
+    <script>
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
+
+(async () => {
+  let ScrollSmoother;
+  try {
+    ScrollSmoother = (await import('gsap/ScrollSmoother')).default;
+    if (ScrollSmoother) {
+      gsap.registerPlugin(ScrollSmoother);
+      ScrollSmoother.create({
+        wrapper: '.viewport-wrapper',
+        content: '.content-scroll',
+        smooth: 1.5,
+        effects: false,
+        normalizeScroll: true,
+        preventDefault: true
+      });
+    }
+  } catch (e) {
+    // Si no está disponible, continuar sin smooth
+  }
+
+  // Animaciones de scroll centralizadas
+  try {
+    const { initScrollAnimations } = await import('../scroll-animations.js');
+    initScrollAnimations();
+  } catch (e) {
+    // Si no está disponible, continuar sin animaciones
+  }
+})();
+</script>
+
+    <style>
+      h1, h2, h3, .font-rye {
+        font-family: 'Rye', cursive, sans-serif;
+        letter-spacing: 0.04em;
+      }
+    </style>
+  </body>
+</html>
