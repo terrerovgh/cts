@@ -1,0 +1,32 @@
+---
+---
+<section id="galeria" class="py-16 bg-gray-50">
+  <h2 class="text-center text-3xl font-bold mb-8">Galería</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
+    <img src="https://source.unsplash.com/random/800x800?tattoo,1" alt="Tatuaje 1" class="w-full h-auto rounded" loading="lazy" />
+    <img src="https://source.unsplash.com/random/800x800?tattoo,2" alt="Tatuaje 2" class="w-full h-auto rounded" loading="lazy" />
+    <img src="https://source.unsplash.com/random/800x800?tattoo,3" alt="Tatuaje 3" class="w-full h-auto rounded" loading="lazy" />
+    <img src="https://source.unsplash.com/random/800x800?tattoo,4" alt="Tatuaje 4" class="w-full h-auto rounded" loading="lazy" />
+    <img src="https://source.unsplash.com/random/800x800?tattoo,5" alt="Tatuaje 5" class="w-full h-auto rounded" loading="lazy" />
+    <img src="https://source.unsplash.com/random/800x800?tattoo,6" alt="Tatuaje 6" class="w-full h-auto rounded" loading="lazy" />
+  </div>
+</section>
+
+<script client:load type="module">
+  import gsap from 'gsap';
+  import ScrollTrigger from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray('#galeria img').forEach((img) => {
+    gsap.from(img, {
+      opacity: 0,
+      y: 30,
+      duration: 0.5,
+      scrollTrigger: {
+        trigger: img,
+        start: 'top 80%',
+        toggleActions: 'play none none reverse'
+      }
+    });
+  });
+</script>
