@@ -1,92 +1,24 @@
 ---
-// Props: nombre, video, descripcion, imagenes
-const { nombre = "David", video = "https://www.w3schools.com/html/mov_bbb.mp4", descripcion = "Especialista en blackwork y geométrico. 8 años de experiencia.", imagenes = [
-  "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=800&h=800&fit=crop",
-  "https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?w=800&h=800&fit=crop"
-] } = Astro.props;
+import ArtistBase from './ArtistBase.astro';
+
+// Props específicos para David
+const trabajos = [
+  { tipo: 'image' as const, src: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=800&h=800&fit=crop", alt: "Blackwork Clásico" },
+  { tipo: 'video' as const, src: "https://www.w3schools.com/html/mov_bbb.mp4", alt: "Proceso Geométrico" },
+  { tipo: 'image' as const, src: "https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?w=800&h=800&fit=crop", alt: "Blackwork Detallado" },
+  { tipo: 'image' as const, src: "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=800&fit=crop", alt: "Diseño Geométrico" },
+  { tipo: 'video' as const, src: "https://www.w3schools.com/html/mov_bbb.mp4", alt: "Técnica Blackwork" },
+  { tipo: 'image' as const, src: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&h=800&fit=crop", alt: "Arte Geométrico" },
+  { tipo: 'image' as const, src: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=600&h=800&fit=crop", alt: "Blackwork Minimalista" },
+  { tipo: 'video' as const, src: "https://www.w3schools.com/html/mov_bbb.mp4", alt: "Making Of Geométrico" }
+];
 ---
 
-<section id="artist-david" class="section py-24 md:py-36 bg-black text-white relative overflow-hidden">
-  <div class="container mx-auto flex flex-col md:flex-row items-center gap-12">
-    <div class="w-full md:w-1/2 relative">
-      <div class="relative rounded-xl overflow-hidden shadow-lg parallax-bg">
-        <video id="video-david" class="w-full h-72 object-cover rounded-xl artist-video" src={video} preload="auto" muted playsinline style="pointer-events:none"></video>
-      </div>
-    </div>
-    <div class="w-full md:w-1/2 flex flex-col gap-6">
-      <h2 class="text-3xl md:text-5xl font-rye font-bold fade-in-artist">{nombre}</h2>
-      <p class="text-lg text-gray-300 fade-in-artist">{descripcion}</p>
-      <div class="flex gap-4 mt-4">
-        {imagenes.map(img => (
-          <img src={img} alt={nombre} class="w-28 h-28 object-cover rounded-lg shadow-lg fade-in-artist" loading="lazy" />
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
-
-<script>
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-gsap.registerPlugin(ScrollTrigger);
-
-function lerp(a, b, n) { return (1 - n) * a + n * b; }
-
-window.addEventListener('DOMContentLoaded', () => {
-  const video = document.getElementById('video-david');
-  let targetTime = 0, currentTime = 0, rafId;
-  function updateVideo() {
-    const vid = video as HTMLVideoElement | null;
-    if (vid && typeof vid.currentTime === 'number') {
-      currentTime = lerp(currentTime, targetTime, 0.2);
-      vid.currentTime = currentTime;
-    }
-    rafId = requestAnimationFrame(updateVideo);
-  }
-  if (video) {
-    video.addEventListener('loadedmetadata', () => {
-      ScrollTrigger.create({
-        trigger: '#artist-david',
-        start: 'top center',
-        end: 'bottom center',
-        scrub: true,
-        onUpdate: self => {
-          const vid = video as HTMLVideoElement | null;
-          if (vid && typeof vid.duration === 'number') targetTime = self.progress * vid.duration;
-        },
-        onLeave: () => { if (rafId) cancelAnimationFrame(rafId); },
-        onEnterBack: () => { if (rafId) cancelAnimationFrame(rafId); rafId = requestAnimationFrame(updateVideo); }
-      });
-      updateVideo();
-    });
-  }
-
-  // Animaciones de texto e imágenes
-  gsap.utils.toArray('.fade-in-artist').forEach((el, i) => {
-    gsap.fromTo(el as HTMLElement, { opacity: 0, y: 40 }, {
-      opacity: 1, y: 0, duration: 1, delay: i * 0.15, ease: 'power2.out',
-      scrollTrigger: {
-        trigger: '#artist-david',
-        start: 'top 80%',
-        end: 'top 40%',
-        scrub: true
-      }
-    });
-  });
-  // Parallax fondo
-  gsap.to('.parallax-bg', {
-    yPercent: 20,
-    scrollTrigger: {
-      trigger: '#artist-david',
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: true
-    }
-  });
-});
-</script>
-
-<style>
-#artist-david { position: relative; }
-.artist-video { box-shadow: 0 8px 32px 0 rgba(0,0,0,0.4); }
-</style>
+<ArtistBase
+  id="david"
+  nombre="David Rodriguez"
+  video="https://www.w3schools.com/html/mov_bbb.mp4"
+  descripcion="Especialista en blackwork y geométrico. 8 años de experiencia creando diseños únicos con líneas precisas y formas arquitectónicas."
+  trabajos={trabajos}
+  accentColor="#8b5cf6"
+/>

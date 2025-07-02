@@ -1,0 +1,328 @@
+---
+export interface Props {
+  id: string;
+  nombre: string;
+  video: string;
+  descripcion: string;
+  trabajos: Array<{
+    tipo: 'image' | 'video';
+    src: string;
+    alt: string;
+  }>;
+  accentColor?: string;
+}
+
+const { 
+  id, 
+  nombre, 
+  video, 
+  descripcion, 
+  trabajos,
+  accentColor = "#ffd700"
+} = Astro.props;
+
+// Importar estilos globales
+import '../styles/horizontal-scroll.css';
+---
+
+<section id={`artist-${id}`} class="artist-section bg-black text-white relative" data-accent-color={accentColor}>
+  <!-- Sección principal del artista -->
+  <div class="artist-intro min-h-screen flex items-center bg-black">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
+      <div class="w-full md:w-1/2 relative">
+        <div class="relative rounded-xl overflow-hidden shadow-2xl parallax-bg">
+          <video 
+            id={`video-${id}`} 
+            class="w-full h-96 object-cover rounded-xl artist-video" 
+            src={video} 
+            preload="auto" 
+            muted 
+            playsinline 
+            style="pointer-events:none"
+          ></video>
+          <div class="video-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+        </div>
+      </div>
+      <div class="w-full md:w-1/2 flex flex-col gap-6">
+        <h2 class="text-4xl md:text-6xl font-rye font-bold fade-in-artist artist-name text-white">{nombre}</h2>
+        <p class="text-xl text-gray-300 fade-in-artist artist-description">{descripcion}</p>
+        <div class="artist-stats fade-in-artist flex gap-8 mt-4">
+          <div class="stat-item text-center">
+            <span class="text-2xl font-bold accent-color text-white">{trabajos.length}</span>
+            <span class="text-sm text-gray-400 block">Trabajos</span>
+          </div>
+          <div class="stat-item text-center">
+            <span class="text-2xl font-bold accent-color text-white">10+</span>
+            <span class="text-sm text-gray-400 block">Años</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de scroll horizontal -->
+  <div class="horizontal-section bg-black" id={`horizontal-${id}`}>
+    <div class="horizontal-wrapper">
+      <div class="section-header mb-12">
+        <h3 class="section-title text-3xl md:text-4xl font-rye font-bold text-center mb-4 text-white">
+          Trabajos de {nombre}
+        </h3>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id={`progress-${id}`}></div>
+        </div>
+      </div>
+      
+      <div class="horizontal-content" id={`${id}-works`}>
+        {trabajos.map((trabajo, index) => (
+          <div class="work-item" data-work-index={index} data-artist={id}>
+            {trabajo.tipo === 'image' ? (
+              <img src={trabajo.src} alt={trabajo.alt} class="work-media" loading="lazy" />
+            ) : (
+              <video src={trabajo.src} class="work-media" muted loop preload="auto" playsinline></video>
+            )}
+            <div class="work-overlay">
+              <div class="work-info">
+                <span class="work-number text-white">{String(index + 1).padStart(2, '0')}</span>
+                <span class="work-type text-white">{trabajo.tipo === 'video' ? '▶' : '📷'}</span>
+              </div>
+              <div class="work-title">
+                <span class="text-white">{trabajo.alt}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// Enhanced Artist script - animaciones manejadas por artist-scroll-enhanced.js
+console.log('ArtistBase component loaded for:', document.currentScript?.closest('section')?.id);
+
+// Setup individual artist data
+document.addEventListener('DOMContentLoaded', () => {
+  const section = document.currentScript?.closest('section');
+  if (section) {
+    // Add data attributes for enhanced scroll manager
+    section.setAttribute('data-artist-loaded', 'true');
+    
+    // Ensure video is properly configured
+    const video = section.querySelector('.artist-video');
+    if (video) {
+      video.addEventListener('loadedmetadata', () => {
+        console.log(`Video loaded for artist: ${section.id}`);
+      });
+      
+      video.addEventListener('error', (e) => {
+        console.warn(`Video error for artist ${section.id}:`, e);
+      });
+    }
+  }
+});
+</script>
+
+<style>
+/* Estilos específicos del componente con tema oscuro */
+.artist-section {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Enhanced video styling */
+.artist-video {
+  transition: all 0.4s ease;
+  filter: brightness(0.8) contrast(1.1);
+}
+
+.artist-video:hover {
+  filter: brightness(1) contrast(1.2);
+  transform: scale(1.02);
+}
+
+.video-overlay {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: linear-gradient(
+    135deg,
+    rgba(0,0,0,0.7) 0%,
+    transparent 50%,
+    rgba(0,0,0,0.3) 100%
+  );
+}
+
+.artist-intro:hover .video-overlay {
+  opacity: 1;
+}
+
+/* Enhanced work item animations */
+.work-item {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.work-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.work-item:hover::after {
+  opacity: 1;
+}
+
+/* Improved progress bar */
+.progress-bar {
+  background: linear-gradient(90deg, 
+    var(--artist-accent, #ffffff) 0%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* Enhanced artist stats */
+.artist-stats {
+  opacity: 0.9;
+  position: relative;
+}
+
+.stat-item {
+  text-align: center;
+  position: relative;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.stat-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stat-item:hover::before {
+  opacity: 1;
+}
+
+.section-header {
+  position: relative;
+  z-index: 2;
+}
+
+.progress-bar-container {
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  transition: width 0.1s ease;
+  background: #ffffff;
+}
+
+.work-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.work-type {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.work-title {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+}
+
+.work-title span {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  backdrop-filter: blur(10px);
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Animaciones adicionales */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.work-item:hover {
+  animation: float 2s ease-in-out infinite;
+}
+
+/* Tema oscuro reforzado */
+.section-title {
+  color: #ffffff !important;
+}
+
+.artist-name {
+  color: #ffffff !important;
+}
+
+.artist-description {
+  color: #d1d5db !important;
+}
+
+.work-number {
+  color: #ffffff !important;
+}
+
+.work-type {
+  color: #ffffff !important;
+}
+
+/* Responsive mejorado */
+@media (max-width: 768px) {
+  .artist-intro {
+    min-height: 80vh;
+    background-color: #000000 !important;
+  }
+  
+  .artist-intro .container {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .artist-stats {
+    justify-content: center;
+  }
+  
+  .horizontal-section {
+    background-color: #000000 !important;
+  }
+}
+</style>

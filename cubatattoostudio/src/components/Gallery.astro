@@ -1,362 +1,549 @@
 ---
-// Datos de muestra para la galería
+// Importar el componente Lightbox
+import Lightbox from './Lightbox.astro';
+
+// Datos de muestra para la galería - expandida para infinite scroll
 const galleryItems = [
   {
     id: 1,
     image: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=800&h=800&fit=crop",
     alt: "Tatuaje de estilo realista",
     category: "Realismo",
-    artist: "Juan"
+    artist: "Juan",
+    description: "Retrato realista en escala de grises"
   },
   {
     id: 2,
     image: "https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?w=800&h=800&fit=crop",
     alt: "Tatuaje tradicional",
     category: "Tradicional",
-    artist: "María"
+    artist: "María",
+    description: "Diseño tradicional americano"
   },
   {
     id: 3,
     image: "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=800&fit=crop",
     alt: "Tatuaje geométrico",
     category: "Geométrico",
-    artist: "Carlos"
+    artist: "Carlos",
+    description: "Patrón geométrico mandala"
   },
   {
     id: 4,
     image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=800&fit=crop",
     alt: "Tatuaje neo-tradicional",
     category: "Neo-tradicional",
-    artist: "Ana"
+    artist: "Ana",
+    description: "Neo-tradicional con colores vibrantes"
   },
   {
     id: 5,
     image: "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=800&fit=crop",
     alt: "Tatuaje minimalista",
     category: "Minimalista",
-    artist: "Luis"
+    artist: "Luis",
+    description: "Líneas simples y elegantes"
   },
   {
     id: 6,
     image: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=800&h=800&fit=crop",
     alt: "Tatuaje blackwork",
     category: "Blackwork",
-    artist: "Sofia"
+    artist: "Sofia",
+    description: "Diseño en tinta negra sólida"
   },
   {
     id: 7,
     image: "https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?w=800&h=800&fit=crop",
     alt: "Tatuaje abstracto",
     category: "Abstracto",
-    artist: "Diego"
+    artist: "Diego",
+    description: "Arte abstracto contemporáneo"
   },
   {
     id: 8,
     image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=800&h=800&fit=crop",
     alt: "Tatuaje dotwork",
     category: "Dotwork",
-    artist: "Elena"
+    artist: "Elena",
+    description: "Técnica de puntillismo detallada"
+  },
+  // Duplicamos para infinite scroll
+  {
+    id: 9,
+    image: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=800&h=800&fit=crop",
+    alt: "Tatuaje biomecánico",
+    category: "Biomecánico",
+    artist: "Juan",
+    description: "Fusión orgánica-mecánica"
+  },
+  {
+    id: 10,
+    image: "https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?w=800&h=800&fit=crop",
+    alt: "Tatuaje japonés",
+    category: "Japonés",
+    artist: "María",
+    description: "Estilo tradicional japonés"
   }
 ];
 
-const categories = ["Todos", ...new Set(galleryItems.map(item => item.category))];
+// Crear un array extendido para infinite loop
+const extendedItems = [...galleryItems, ...galleryItems, ...galleryItems];
 ---
 
-<section id="galeria" class="py-20 bg-white">
-  <div class="container mx-auto px-6">
-    <!-- Título de sección -->
-    <div class="text-center mb-16">
-      <h2 class="section-title text-4xl md:text-6xl font-black text-black mb-4 opacity-0">
+<!-- Gallery Section with Infinite Horizontal Scroll -->
+<section id="gallery" class="gallery-section relative min-h-screen bg-white overflow-hidden">
+  
+  <!-- Section Header -->
+  <div class="gallery-header absolute top-0 left-0 right-0 z-20 p-8 md:p-16">
+    <div class="text-center">
+      <h2 class="gallery-title text-4xl md:text-6xl font-rye font-bold text-black mb-4">
         TRABAJOS DESTACADOS
       </h2>
-      <div class="section-line w-24 h-1 bg-black mx-auto opacity-0"></div>
-      <p class="section-subtitle text-gray-600 mt-6 text-lg opacity-0">
+      <div class="gallery-subtitle text-gray-600 text-lg">
         Una selección de nuestros mejores trabajos
-      </p>
+      </div>
     </div>
+  </div>
 
-    <!-- Filtros de categoría -->
-    <div class="filter-container flex flex-wrap justify-center gap-4 mb-12 opacity-0">
-      {categories.map((category) => (
-        <button 
-          class="filter-btn px-6 py-2 border-2 border-black text-black hover:bg-black hover:text-white transition-all duration-300 uppercase tracking-wide font-semibold"
-          data-filter={category.toLowerCase()}
-        >
-          {category}
-        </button>
-      ))}
-    </div>
-
-    <!-- Grid de galería -->
-    <div class="gallery-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {galleryItems.map((item, index) => (
+  <!-- Gallery Container -->
+  <div class="gallery-container relative w-full h-screen">
+    
+    <!-- Infinite Scroll Wrapper -->
+    <div class="gallery-track flex items-center h-full" style="width: max-content;">
+      {extendedItems.map((item, index) => (
         <div 
-          class="gallery-item group relative overflow-hidden bg-black aspect-square cursor-pointer"
-          data-category={item.category.toLowerCase()}
+          class="gallery-slide flex-shrink-0 relative group"
           data-index={index}
+          data-category={item.category.toLowerCase()}
+          style="width: 80vw; height: 80vh; margin-right: 2vw;"
         >
-          <!-- Imagen -->
-          <img 
-            src={item.image}
-            alt={item.alt}
-            class="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0"
-            loading="lazy"
-          />
-          
-          <!-- Overlay con información -->
-          <div class="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-            <div class="text-center text-white p-4">
-              <h3 class="text-xl font-bold mb-2">{item.category}</h3>
-              <p class="text-sm text-gray-300">Por {item.artist}</p>
-              <div class="mt-4">
-                <span class="inline-block px-3 py-1 bg-white text-black text-xs font-semibold uppercase tracking-wide">
-                  Ver Detalle
+          <!-- Main Image Container -->
+          <div class="image-container relative w-full h-full overflow-hidden bg-black rounded-lg shadow-2xl">
+            
+            <!-- Background Image -->
+            <img 
+              src={item.image}
+              alt={item.alt}
+              class="slide-image w-full h-full object-cover transition-all duration-700 grayscale"
+              loading="lazy"
+            />
+            
+            <!-- Gradient Overlay -->
+            <div class="gradient-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
+            
+            <!-- Content Overlay -->
+            <div class="slide-content absolute bottom-0 left-0 right-0 p-8 text-white transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+              <div class="content-wrapper">
+                <span class="category-tag inline-block px-3 py-1 bg-white/20 backdrop-blur-sm text-xs uppercase tracking-wider mb-3">
+                  {item.category}
                 </span>
+                <h3 class="slide-title text-2xl md:text-3xl font-bold mb-2 leading-tight">
+                  {item.description}
+                </h3>
+                <p class="slide-artist text-gray-300 text-lg mb-4">
+                  Por <span class="font-semibold">{item.artist}</span>
+                </p>
+                <button class="view-detail-btn inline-flex items-center px-4 py-2 bg-white text-black hover:bg-black hover:text-white border border-white transition-all duration-300 text-sm font-semibold uppercase tracking-wide">
+                  <span>Ver Detalle</span>
+                  <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
               </div>
             </div>
-          </div>
-
-          <!-- Número de índice -->
-          <div class="absolute top-4 left-4 w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white text-sm font-bold">
-            {(index + 1).toString().padStart(2, '0')}
+            
+            <!-- Index Number -->
+            <div class="slide-number absolute top-6 left-6 w-12 h-12 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center text-white font-bold">
+              {(index % galleryItems.length + 1).toString().padStart(2, '0')}
+            </div>
+            
+            <!-- Artist Badge -->
+            <div class="artist-badge absolute top-6 right-6 px-3 py-1 bg-black/40 backdrop-blur-sm border border-white/20 rounded-full text-white text-sm font-medium">
+              {item.artist}
+            </div>
           </div>
         </div>
       ))}
     </div>
-
-    <!-- Botón para ver más -->
-    <div class="text-center mt-16">
-      <button class="cta-button px-8 py-4 bg-black text-white hover:bg-white hover:text-black border-2 border-black transition-all duration-300 uppercase tracking-wide font-bold opacity-0">
-        Ver Más Trabajos
-      </button>
+    
+    <!-- Navigation Controls -->
+    <div class="gallery-controls absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30">
+      <div class="flex items-center space-x-4">
+        <button class="control-btn prev-btn w-12 h-12 bg-black/20 hover:bg-black/40 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white transition-all duration-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        
+        <div class="gallery-info px-4 py-2 bg-black/20 backdrop-blur-sm border border-white/30 rounded-full text-white text-sm font-medium">
+          <span class="current-slide">01</span>
+          <span class="divider mx-2">/</span>
+          <span class="total-slides">{galleryItems.length.toString().padStart(2, '0')}</span>
+        </div>
+        
+        <button class="control-btn next-btn w-12 h-12 bg-black/20 hover:bg-black/40 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white transition-all duration-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
     </div>
-  </div>
+    
+    <!-- Scroll Hint -->
+    <div class="scroll-hint absolute bottom-8 right-8 text-black/60 text-sm font-medium">
+      <div class="flex items-center space-x-2">
+        <span>Rueda para navegar</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h8m0 0v8m0-8l-8 8"></path>
+        </svg>
+      </div>
+    </div>
+    
 </section>
 
-<!-- Modal para vista detallada (lightbox simple) -->
-<div id="gallery-modal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4">
-  <div class="relative max-w-4xl max-h-full">
-    <button id="close-modal" class="absolute -top-4 -right-4 w-8 h-8 bg-white text-black rounded-full flex items-center justify-center font-bold hover:bg-gray-200 transition-colors">
-      ✕
-    </button>
-    <img id="modal-image" src="" alt="" class="max-w-full max-h-full object-contain" />
-    <div id="modal-info" class="absolute bottom-0 left-0 right-0 bg-black/80 text-white p-4">
-      <h3 id="modal-title" class="text-xl font-bold"></h3>
-      <p id="modal-artist" class="text-gray-300"></p>
-    </div>
-  </div>
-</div>
+<!-- Lightbox Modal -->
+<Lightbox id="gallery-lightbox" />
 
 <style>
-  .gallery-item {
-    transform: translateY(60px);
-    opacity: 0;
+  /* Gallery Section Styles */
+  .gallery-section {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   }
-
-  .section-title,
-  .section-line,
-  .section-subtitle,
-  .filter-container,
-  .cta-button {
-    transform: translateY(40px);
+  
+  .gallery-container {
+    overflow: hidden;
+    position: relative;
   }
-
-  .filter-btn.active {
-    background-color: black;
-    color: white;
+  
+  .gallery-track {
+    will-change: transform;
+    cursor: grab;
   }
-
+  
+  .gallery-track:active {
+    cursor: grabbing;
+  }
+  
+  .gallery-slide {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .image-container {
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .gallery-slide:hover .image-container {
+    transform: scale(1.02);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  }
+  
+  .slide-image {
+    filter: grayscale(100%) contrast(1.1);
+    transition: all 0.7s ease;
+  }
+  
+  .gallery-slide:hover .slide-image {
+    filter: grayscale(0%) contrast(1);
+    transform: scale(1.05);
+  }
+  
+  .gradient-overlay {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.1) 0%,
+      rgba(0, 0, 0, 0) 30%,
+      rgba(0, 0, 0, 0) 60%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+  }
+  
+  .slide-content {
+    backdrop-filter: blur(10px);
+  }
+  
+  .category-tag {
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    font-weight: 600;
+  }
+  
+  .control-btn {
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+  
+  .control-btn:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .gallery-info {
+    backdrop-filter: blur(10px);
+    font-family: 'Monaco', 'Courier New', monospace;
+  }
+  
+  .scroll-hint {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { 
+      transform: translateY(0); 
+      opacity: 0.6; 
+    }
+    50% { 
+      transform: translateY(-5px); 
+      opacity: 1; 
+    }
+  }
+  
+  /* Responsive adjustments */
   @media (max-width: 768px) {
-    .gallery-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+    .gallery-slide {
+      width: 90vw !important;
+      height: 70vh !important;
+      margin-right: 5vw !important;
+    }
+    
+    .gallery-header {
+      padding: 2rem 1rem !important;
+    }
+    
+    .gallery-title {
+      font-size: 2.5rem !important;
+    }
+    
+    .slide-content {
+      padding: 1.5rem !important;
+    }
+    
+    .slide-title {
+      font-size: 1.5rem !important;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .gallery-slide {
+      width: 95vw !important;
+      height: 60vh !important;
+      margin-right: 2.5vw !important;
+    }
+    
+    .gallery-title {
+      font-size: 2rem !important;
     }
   }
 </style>
 
 <script>
-  import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Observer } from 'gsap/Observer';
 
-  gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, Observer);
 
-  window.addEventListener('DOMContentLoaded', () => {
-    // Fade-in y slide-up de la sección Galería
-    gsap.from('#galeria', {
+document.addEventListener('DOMContentLoaded', () => {
+  const gallerySection = document.querySelector('.gallery-section');
+  const galleryTrack = document.querySelector('.gallery-track');
+  const slides = document.querySelectorAll('.gallery-slide');
+  const prevBtn = document.querySelector('.prev-btn');
+  const nextBtn = document.querySelector('.next-btn');
+  const currentSlideEl = document.querySelector('.current-slide');
+  const totalSlidesEl = document.querySelector('.total-slides');
+  
+  if (!gallerySection || !galleryTrack || !slides.length) {
+    console.warn('Gallery elements not found');
+    return;
+  }
+  
+  let currentIndex = 0;
+  const totalSlides = slides.length / 3; // Since we tripled the array
+  let isAnimating = false;
+  
+  // Calculate slide width and total width
+  const slideWidth = window.innerWidth * 0.82; // 80vw + 2vw margin
+  const totalWidth = slideWidth * slides.length;
+  
+  // Set initial position to show middle set of slides
+  const initialOffset = -slideWidth * totalSlides;
+  gsap.set(galleryTrack, { x: initialOffset });
+  
+  // Update UI
+  function updateUI() {
+    if (currentSlideEl) {
+      currentSlideEl.textContent = (currentIndex + 1).toString().padStart(2, '0');
+    }
+  }
+  
+  // Animate to slide
+  function goToSlide(index: number) {
+    if (isAnimating) return;
+    
+    isAnimating = true;
+    const targetX = initialOffset - (index * slideWidth);
+    
+    gsap.to(galleryTrack, {
+      x: targetX,
+      duration: 1.2,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        isAnimating = false;
+        
+        // Handle infinite loop
+        if (index >= totalSlides) {
+          currentIndex = 0;
+          gsap.set(galleryTrack, { x: initialOffset });
+        } else if (index < 0) {
+          currentIndex = totalSlides - 1;
+          gsap.set(galleryTrack, { x: initialOffset - ((totalSlides - 1) * slideWidth) });
+        } else {
+          currentIndex = index;
+        }
+        
+        updateUI();
+      }
+    });
+    
+    // Animate slide content
+    slides.forEach((slide, i) => {
+      const content = slide.querySelector('.slide-content');
+      const image = slide.querySelector('.slide-image');
+      
+      if (Math.abs(i - (index + totalSlides)) <= 1) {
+        // Active and adjacent slides
+        gsap.to(image, { scale: 1, duration: 1.2, ease: 'power2.out' });
+        if (i === index + totalSlides) {
+          // Current slide
+          gsap.fromTo(content, 
+            { y: 20, opacity: 0 },
+            { y: 0, opacity: 1, duration: 1, delay: 0.3, ease: 'power2.out' }
+          );
+        }
+      } else {
+        // Distant slides
+        gsap.to(image, { scale: 0.95, duration: 1.2, ease: 'power2.out' });
+      }
+    });
+  }
+  
+  // Navigation event listeners
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      goToSlide(currentIndex - 1);
+    });
+  }
+  
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      goToSlide(currentIndex + 1);
+    });
+  }
+  
+  // GSAP Observer for scroll control
+  let observer: any = null;
+  
+  function createObserver() {
+    observer = Observer.create({
+      target: gallerySection,
+      type: 'wheel,touch,pointer',
+      onDown: () => goToSlide(currentIndex + 1),
+      onUp: () => goToSlide(currentIndex - 1),
+      onLeft: () => goToSlide(currentIndex + 1),
+      onRight: () => goToSlide(currentIndex - 1),
+      tolerance: 10,
+      preventDefault: true,
+      dragMinimum: 10
+    });
+  }
+  
+  // ScrollTrigger to enable/disable observer
+  ScrollTrigger.create({
+    trigger: gallerySection,
+    start: 'top bottom',
+    end: 'bottom top',
+    onEnter: () => {
+      if (!observer) createObserver();
+    },
+    onLeave: () => {
+      if (observer) observer.kill();
+      observer = null;
+    },
+    onEnterBack: () => {
+      if (!observer) createObserver();
+    },
+    onLeaveBack: () => {
+      if (observer) observer.kill();
+      observer = null;
+    }
+  });
+  
+  // Initial setup
+  updateUI();
+  
+  // Section entrance animation
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: gallerySection,
+      start: 'top 80%',
+      end: 'top 50%',
+      toggleActions: 'play none none reverse'
+    }
+  });
+  
+  tl.from('.gallery-header', {
+    y: 50,
+    opacity: 0,
+    duration: 1,
+    ease: 'power2.out'
+  })
+  .from('.gallery-controls', {
+    y: 30,
+    opacity: 0,
+    duration: 0.8,
+    ease: 'power2.out'
+  }, '-=0.3')
+  .from('.scroll-hint', {
+    y: 20,
+    opacity: 0,
+    duration: 0.6,
+    ease: 'power2.out'
+  }, '-=0.2');
+  
+  // Reveal slides on entry
+  gsap.fromTo(slides,
+    { 
       opacity: 0,
       y: 100,
-      duration: 1.2,
+      scale: 0.8
+    },
+    {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 1,
+      stagger: 0.1,
       ease: 'power2.out',
       scrollTrigger: {
-        trigger: '#galeria',
+        trigger: '.gallery-container',
         start: 'top 80%',
-        end: 'top 50%',
-        scrub: true
+        toggleActions: 'play none none reverse'
       }
-    });
-    // Fade-in escalonado de las imágenes
-    gsap.utils.toArray('.gallery-item').forEach((item, i) => {
-      gsap.from(item as HTMLElement, {
-        opacity: 0,
-        y: 60,
-        duration: 1,
-        delay: i * 0.08,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: item as HTMLElement,
-          start: 'top 90%',
-          end: 'top 60%',
-          scrub: true
-        }
-      });
-    });
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    // Animación de entrada de la sección
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#galeria",
-        start: "top 80%",
-        end: "bottom 20%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    tl.to('.section-title', { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" })
-      .to('.section-line', { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.4")
-      .to('.section-subtitle', { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.3")
-      .to('.filter-container', { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }, "-=0.2");
-
-    // Animación escalonada de las imágenes
-    gsap.to('.gallery-item', {
-      y: 0,
-      opacity: 1,
-      duration: 0.8,
-      stagger: 0.1,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".gallery-grid",
-        start: "top 85%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    // Animación del botón CTA
-    gsap.to('.cta-button', {
-      y: 0,
-      opacity: 1,
-      duration: 0.6,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".cta-button",
-        start: "top 90%",
-        toggleActions: "play none none reverse"
-      }
-    });
-
-    // Sistema de filtros
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-
-    // Activar primer botón por defecto
-    if (filterButtons.length > 0) filterButtons[0].classList.add('active');
-
-    filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const filter = button.getAttribute('data-filter');
-        // Actualizar botones activos
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        // Filtrar elementos con animación
-        galleryItems.forEach(item => {
-          const category = item.getAttribute('data-category');
-          if (filter === 'todos' || category === filter) {
-            gsap.to(item as HTMLElement, { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" });
-            if (item instanceof HTMLElement) item.style.display = 'block';
-          } else {
-            gsap.to(item as HTMLElement, {
-              opacity: 0,
-              scale: 0.8,
-              duration: 0.3,
-              ease: "power2.in",
-              onComplete: () => {
-                if (item instanceof HTMLElement) item.style.display = 'none';
-              }
-            });
-          }
-        });
-      });
-    });
-
-    // Sistema de modal/lightbox
-    const modal = document.getElementById('gallery-modal');
-    const modalImage = document.getElementById('modal-image') as HTMLImageElement | null;
-    const modalTitle = document.getElementById('modal-title') as HTMLElement | null;
-    const modalArtist = document.getElementById('modal-artist') as HTMLElement | null;
-    const closeModal = document.getElementById('close-modal');
-
-    galleryItems.forEach(item => {
-      item.addEventListener('click', () => {
-        const img = item.querySelector('img') as HTMLImageElement | null;
-        const category = item.getAttribute('data-category');
-        // Datos del item (esto vendría de una fuente de datos real)
-        const itemData = {
-          image: img?.src || '',
-          alt: img?.alt || '',
-          category: category ? category.charAt(0).toUpperCase() + category.slice(1) : '',
-          artist: (item.querySelector('.text-gray-300') as HTMLElement)?.textContent?.replace('Por ', '') || 'Artista'
-        };
-        if (modal && modalImage && modalTitle && modalArtist) {
-          modalImage.src = itemData.image;
-          modalImage.alt = itemData.alt;
-          modalTitle.textContent = itemData.category;
-          modalArtist.textContent = `Por ${itemData.artist}`;
-          // Mostrar modal con animación
-          modal.classList.remove('hidden');
-          modal.classList.add('flex');
-          gsap.fromTo(modal,
-            { opacity: 0 },
-            { opacity: 1, duration: 0.3 }
-          );
-          const modalDiv = modal.querySelector('div');
-          if (modalDiv) {
-            gsap.fromTo(modalDiv,
-              { scale: 0.8, opacity: 0 },
-              { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }
-            );
-          }
-        }
-      });
-    });
-
-    // Cerrar modal
-    const closeModalFunction = () => {
-      if (modal) {
-        gsap.to(modal, {
-          opacity: 0,
-          duration: 0.3,
-          onComplete: () => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-          }
-        });
-      }
-    };
-
-    if (closeModal) closeModal.addEventListener('click', closeModalFunction);
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          closeModalFunction();
-        }
-      });
     }
-    // Cerrar con tecla Escape
-    document.addEventListener('keydown', (e) => {
-      if (modal && e.key === 'Escape' && !modal.classList.contains('hidden')) {
-        closeModalFunction();
+  );
+  
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    if (observer) observer.kill();
+    ScrollTrigger.getAll().forEach(trigger => {
+      if (trigger.vars.id?.includes('gallery')) {
+        trigger.kill();
       }
     });
   });
+});
 </script>

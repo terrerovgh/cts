@@ -1,0 +1,504 @@
+---
+export interface Props {
+  id: string;
+  nombre: string;
+  video: string;
+  descripcion: string;
+  trabajos: Array<{
+    tipo: 'image' | 'video';
+    src: string;
+    alt: string;
+  }>;
+  accentColor?: string;
+}
+
+const { 
+  id, 
+  nombre, 
+  video, 
+  descripcion, 
+  trabajos,
+  accentColor = "#ffd700"
+} = Astro.props;
+
+// Importar estilos globales
+import '../styles/horizontal-scroll.css';
+---
+
+<section id={`artist-${id}`} class="artist-section bg-black text-white relative" data-accent-color={accentColor}>
+  <!-- Sección principal del artista -->
+  <div class="artist-intro min-h-screen flex items-center">
+    <div class="container mx-auto flex flex-col md:flex-row items-center gap-12">
+      <div class="w-full md:w-1/2 relative">
+        <div class="relative rounded-xl overflow-hidden shadow-lg parallax-bg">
+          <video 
+            id={`video-${id}`} 
+            class="w-full h-96 object-cover rounded-xl artist-video" 
+            src={video} 
+            preload="auto" 
+            muted 
+            playsinline 
+            style="pointer-events:none"
+          ></video>
+          <div class="video-overlay absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+        </div>
+      </div>
+      <div class="w-full md:w-1/2 flex flex-col gap-6">
+        <h2 class="text-4xl md:text-6xl font-rye font-bold fade-in-artist artist-name">{nombre}</h2>
+        <p class="text-xl text-gray-300 fade-in-artist artist-description">{descripcion}</p>
+        <div class="artist-stats fade-in-artist flex gap-8 mt-4">
+          <div class="stat-item">
+            <span class="text-2xl font-bold accent-color">{trabajos.length}</span>
+            <span class="text-sm text-gray-400 block">Trabajos</span>
+          </div>
+          <div class="stat-item">
+            <span class="text-2xl font-bold accent-color">10+</span>
+            <span class="text-sm text-gray-400 block">Años</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de scroll horizontal -->
+  <div class="horizontal-section" id={`horizontal-${id}`}>
+    <div class="horizontal-wrapper">
+      <div class="section-header mb-12">
+        <h3 class="section-title text-3xl md:text-4xl font-rye font-bold text-center mb-4">
+          Trabajos de {nombre}
+        </h3>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id={`progress-${id}`}></div>
+        </div>
+      </div>
+      
+      <div class="horizontal-content" id={`${id}-works`}>
+        {trabajos.map((trabajo, index) => (
+          <div class="work-item" data-work-index={index} data-artist={id}>
+            {trabajo.tipo === 'image' ? (
+              <img src={trabajo.src} alt={trabajo.alt} class="work-media" loading="lazy" />
+            ) : (
+              <video src={trabajo.src} class="work-media" muted loop preload="auto" playsinline></video>
+            )}
+            <div class="work-overlay">
+              <div class="work-info">
+                <span class="work-number">{String(index + 1).padStart(2, '0')}</span>
+                <span class="work-type">{trabajo.tipo === 'video' ? '▶' : '📷'}</span>
+              </div>
+              <div class="work-title">
+                <span>{trabajo.alt}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
+
+// Función reutilizable para configurar animaciones de artista
+function setupArtistAnimations(artistId: string, accentColor: string) {
+  const artistSection = document.querySelector(`#artist-${artistId}`);
+  if (!artistSection) return;
+
+  const video = document.getElementById(`video-${artistId}`) as HTMLVideoElement;
+  const horizontalSection = document.querySelector(`#horizontal-${artistId}`);
+  const horizontalContent = document.querySelector(`#${artistId}-works`);
+  const progressBar = document.querySelector(`#progress-${artistId}`);
+
+  // Configurar color de acento dinámicamente
+  if (accentColor) {
+    const style = document.createElement('style');
+    style.textContent = `
+      #artist-${artistId} .accent-color { color: ${accentColor}; }
+      #artist-${artistId} .work-item:hover .work-number { color: ${accentColor}; }
+      #artist-${artistId} .progress-bar { background: linear-gradient(90deg, ${accentColor}, ${accentColor}88); }
+      #artist-${artistId} .artist-name { 
+        background: linear-gradient(45deg, white, ${accentColor});
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Video scrubbing mejorado
+  if (video) {
+    let targetTime = 0;
+    let currentTime = 0;
+    let rafId: number;
+
+    const lerp = (a: number, b: number, n: number) => (1 - n) * a + n * b;
+
+    function updateVideo() {
+      if (video && typeof video.currentTime === 'number') {
+        currentTime = lerp(currentTime, targetTime, 0.15);
+        video.currentTime = currentTime;
+      }
+      rafId = requestAnimationFrame(updateVideo);
+    }
+
+    video.addEventListener('loadedmetadata', () => {
+      ScrollTrigger.create({
+        trigger: artistSection.querySelector('.artist-intro'),
+        start: 'top center',
+        end: 'bottom center',
+        scrub: 2,
+        onUpdate: self => {
+          if (video.duration) {
+            targetTime = self.progress * video.duration;
+          }
+        },
+        onEnter: () => {
+          rafId = requestAnimationFrame(updateVideo);
+        },
+        onLeave: () => {
+          if (rafId) cancelAnimationFrame(rafId);
+        }
+      });
+    });
+  }
+
+  // Scroll horizontal avanzado
+  if (horizontalSection && horizontalContent) {
+    const workItems = gsap.utils.toArray<Element>('.work-item');
+    
+    const getScrollAmount = () => {
+      const horizontalContentWidth = (horizontalContent as Element).scrollWidth;
+      return -(horizontalContentWidth - window.innerWidth + 100); // +100 para padding final
+    };
+
+    // Timeline principal para scroll horizontal
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: horizontalSection,
+        start: "top top",
+        end: () => `+=${(horizontalContent as Element).scrollWidth * 0.8}`,
+        pin: true,
+        scrub: 1.5,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          // Actualizar barra de progreso
+          if (progressBar) {
+            gsap.set(progressBar, { width: `${self.progress * 100}%` });
+          }
+        }
+      }
+    });
+
+    // Animación principal de scroll horizontal
+    tl.to(horizontalContent, {
+      x: getScrollAmount,
+      ease: "none",
+      duration: 1
+    });
+
+    // Configurar animaciones para cada trabajo
+    workItems.forEach((item, index) => {
+      const workMedia = item.querySelector('.work-media') as HTMLElement;
+      const workOverlay = item.querySelector('.work-overlay') as HTMLElement;
+      const workInfo = item.querySelector('.work-info') as HTMLElement;
+
+      // Animación de entrada escalonada
+      gsap.set(item, { 
+        opacity: 0.4,
+        scale: 0.9,
+        y: 80,
+        rotationY: 15
+      });
+
+      ScrollTrigger.create({
+        trigger: item,
+        start: "left 75%",
+        end: "left 25%",
+        scrub: 1,
+        containerAnimation: tl,
+        onEnter: () => {
+          gsap.to(item, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            rotationY: 0,
+            duration: 0.8,
+            ease: "power2.out"
+          });
+        },
+        onLeave: () => {
+          gsap.to(item, {
+            opacity: 0.6,
+            scale: 0.95,
+            duration: 0.4
+          });
+        },
+        onEnterBack: () => {
+          gsap.to(item, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.6
+          });
+        }
+      });
+
+      // Efectos de hover mejorados
+      item.addEventListener('mouseenter', () => {
+        gsap.to(item, {
+          scale: 1.08,
+          y: -15,
+          duration: 0.4,
+          ease: "power2.out"
+        });
+        
+        gsap.to(workMedia, {
+          scale: 1.15,
+          filter: 'brightness(1.1) contrast(1.1) saturate(1.2)',
+          duration: 0.4
+        });
+
+        gsap.to(workInfo, {
+          y: -10,
+          scale: 1.1,
+          duration: 0.3
+        });
+
+        // Reproducir video si es video
+        if (workMedia.tagName === 'VIDEO') {
+          const videoEl = workMedia as HTMLVideoElement;
+          videoEl.currentTime = 0;
+          videoEl.play().catch(() => {});
+        }
+      });
+
+      item.addEventListener('mouseleave', () => {
+        gsap.to(item, {
+          scale: 1,
+          y: 0,
+          duration: 0.4,
+          ease: "power2.out"
+        });
+        
+        gsap.to(workMedia, {
+          scale: 1,
+          filter: 'brightness(0.9) contrast(1.1)',
+          duration: 0.4
+        });
+
+        gsap.to(workInfo, {
+          y: 0,
+          scale: 1,
+          duration: 0.3
+        });
+
+        // Pausar video
+        if (workMedia.tagName === 'VIDEO') {
+          const videoEl = workMedia as HTMLVideoElement;
+          videoEl.pause();
+        }
+      });
+
+      // Animación de parallax individual para el media
+      ScrollTrigger.create({
+        trigger: item,
+        start: "left right",
+        end: "right left",
+        scrub: true,
+        containerAnimation: tl,
+        onUpdate: (self) => {
+          const progress = self.progress;
+          gsap.set(workMedia, {
+            x: progress * 20,
+            rotation: progress * 2
+          });
+        }
+      });
+    });
+  }
+
+  // Animaciones de entrada para la sección intro
+  const fadeInElements = artistSection.querySelectorAll('.fade-in-artist');
+  fadeInElements.forEach((el, i) => {
+    gsap.fromTo(el, 
+      { 
+        opacity: 0, 
+        y: 80, 
+        scale: 0.9 
+      }, 
+      {
+        opacity: 1, 
+        y: 0, 
+        scale: 1,
+        duration: 1.2,
+        delay: i * 0.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: artistSection.querySelector('.artist-intro'),
+          start: 'top 70%',
+          end: 'bottom 30%',
+          toggleActions: 'play none none reverse'
+        }
+      }
+    );
+  });
+
+  // Parallax mejorado para el video de fondo
+  gsap.to(artistSection.querySelector('.parallax-bg'), {
+    yPercent: -30,
+    scale: 1.1,
+    scrollTrigger: {
+      trigger: artistSection.querySelector('.artist-intro'),
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: 1.5
+    }
+  });
+
+  // Efecto de reveal en el título
+  const artistName = artistSection.querySelector('.artist-name');
+  if (artistName) {
+    gsap.fromTo(artistName,
+      {
+        backgroundPosition: '200% center'
+      },
+      {
+        backgroundPosition: '0% center',
+        duration: 2,
+        ease: 'power2.inOut',
+        scrollTrigger: {
+          trigger: artistSection.querySelector('.artist-intro'),
+          start: 'top 60%',
+          toggleActions: 'play none none reverse'
+        }
+      }
+    );
+  }
+}
+
+// Inicializar animaciones para este artista específico
+window.addEventListener('DOMContentLoaded', () => {
+  // Buscar el artista correspondiente a este script
+  const scripts = document.querySelectorAll('script');
+  const currentScript = Array.from(scripts).find(script => 
+    script.textContent?.includes('setupArtistAnimations')
+  );
+  
+  if (currentScript) {
+    const artistSection = currentScript.closest('section[id^="artist-"]');
+    if (artistSection) {
+      const artistId = artistSection.id.replace('artist-', '');
+      const accentColor = artistSection.getAttribute('data-accent-color') || '#ffd700';
+      
+      // Esperar un frame para asegurar que todos los elementos estén renderizados
+      requestAnimationFrame(() => {
+        setupArtistAnimations(artistId, accentColor);
+      });
+    }
+  }
+});
+</script>
+
+<style>
+/* Estilos específicos del componente */
+.video-overlay {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.artist-intro:hover .video-overlay {
+  opacity: 1;
+}
+
+.artist-stats {
+  opacity: 0.9;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.section-header {
+  position: relative;
+  z-index: 2;
+}
+
+.progress-bar-container {
+  width: 200px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  transition: width 0.1s ease;
+}
+
+.work-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.work-type {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.work-title {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+}
+
+.work-title span {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  backdrop-filter: blur(10px);
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Animaciones adicionales */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.work-item:hover {
+  animation: float 2s ease-in-out infinite;
+}
+
+/* Responsive mejorado */
+@media (max-width: 768px) {
+  .artist-intro {
+    min-height: 80vh;
+  }
+  
+  .artist-intro .container {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .artist-stats {
+    justify-content: center;
+  }
+}
+</style>

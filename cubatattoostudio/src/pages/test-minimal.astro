@@ -1,0 +1,121 @@
+---
+// Página completamente mínima para debug
+---
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuba Tattoo Studio - Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .test-section {
+            padding: 100px 20px;
+            text-align: center;
+            border: 3px solid red;
+            margin: 20px;
+        }
+        
+        h1 {
+            font-size: 48px;
+            color: yellow;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            font-size: 32px;
+            color: cyan;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            font-size: 20px;
+            color: white;
+        }
+        
+        .hero {
+            background: linear-gradient(45deg, #ff0000, #00ff00);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .gallery {
+            background: linear-gradient(45deg, #0000ff, #ff00ff);
+            min-height: 50vh;
+        }
+        
+        .services {
+            background: linear-gradient(45deg, #ffff00, #ff8800);
+            min-height: 50vh;
+            color: black;
+        }
+        
+        .contact {
+            background: linear-gradient(45deg, #008800, #0088ff);
+            min-height: 50vh;
+        }
+    </style>
+</head>
+<body>
+    <!-- HERO SECTION -->
+    <section class="hero test-section">
+        <h1>🔥 CUBA TATTOO STUDIO 🔥</h1>
+        <p>Si puedes ver este texto, el sitio está funcionando</p>
+        <p>Sección Hero - OK ✅</p>
+    </section>
+    
+    <!-- GALLERY SECTION -->
+    <section class="gallery test-section">
+        <h2>🎨 GALERÍA 🎨</h2>
+        <p>Esta es la sección de galería</p>
+        <p>Sección Gallery - OK ✅</p>
+    </section>
+    
+    <!-- SERVICES SECTION -->
+    <section class="services test-section">
+        <h2>💼 SERVICIOS 💼</h2>
+        <p>Esta es la sección de servicios</p>
+        <p>Sección Services - OK ✅</p>
+    </section>
+    
+    <!-- CONTACT SECTION -->
+    <section class="contact test-section">
+        <h2>📞 CONTACTO 📞</h2>
+        <p>Esta es la sección de contacto</p>
+        <p>Sección Contact - OK ✅</p>
+    </section>
+    
+    <script>
+        console.log('🚀 Cuba Tattoo Studio - Script cargado');
+        
+        // Mostrar alerta para confirmar que JavaScript funciona
+        setTimeout(() => {
+            console.log('✅ JavaScript funcionando después de 1 segundo');
+        }, 1000);
+        
+        // Cambiar el título cada 3 segundos
+        let counter = 0;
+        setInterval(() => {
+            counter++;
+            document.title = `Cuba Tattoo Studio - Test ${counter}`;
+            console.log(`🔄 Título actualizado: ${counter}`);
+        }, 3000);
+    </script>
+</body>
+</html>

@@ -1,92 +1,504 @@
 ---
 ---
 
-<section id="hero" class="section min-h-screen flex flex-col justify-center items-center bg-black text-white relative overflow-hidden">
-  <div class="absolute inset-0 w-full h-full z-0">
-    <video class="w-full h-full object-cover opacity-70" src="/assets/hero.mp4" autoplay loop muted playsinline poster="/assets/logo.png"></video>
-    <div class="absolute inset-0 bg-gradient-to-b from-black/80 to-black/60"></div>
-  </div>
-  <div class="relative z-10 flex flex-col items-center justify-center gap-8 pt-32 pb-16">
-    <img src="/assets/logo.png" alt="Logo Cuba Tattoo Studio" class="h-24 w-auto drop-shadow-2xl animate-fade-in" style="max-width:120px;" />
-    <h1 class="text-5xl md:text-7xl font-rye font-bold text-white drop-shadow-lg animate-fade-in delay-100">Arte en la piel, contado en cada trazo</h1>
-    <p class="text-xl md:text-2xl text-gray-200 mt-4 animate-fade-in delay-200">Tatuajes de autor en La Habana</p>
-    <span class="mt-10 animate-bounce text-3xl text-white/80">↓</span>
+<!-- Video Scrub Section - GTA VI Style -->
+<section id="video_scrub_01" class="relative min-h-screen bg-black">
+  <div class="pinned-container relative min-h-screen overflow-hidden">
+    <!-- Background Video (optional - fallback to gradient if not available) -->
+    <video 
+      id="hero-video" 
+      class="absolute inset-0 w-full h-full object-cover opacity-60" 
+      muted 
+      playsinline 
+      poster="/assets/logo.png"
+      style="display: none;"
+    >
+      <!-- Using test video from internet -->
+      <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+    </video>
+    
+    <!-- Fallback animated background -->
+    <div class="hero-bg absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+    
+    <!-- Animated ink splatter effect -->
+    <div class="ink-effect absolute inset-0 opacity-20">
+      <div class="ink-splatter ink-splatter-1"></div>
+      <div class="ink-splatter ink-splatter-2"></div>
+      <div class="ink-splatter ink-splatter-3"></div>
+    </div>
+    
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/90"></div>
+    
+    <!-- Parallax Layers -->
+    <div class="parallax-bg absolute inset-0 z-10">
+      <!-- Floating particles effect -->
+      <div class="particles">
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        <div class="particle particle-5"></div>
+      </div>
+    </div>
+    
+    <!-- Hero Content - Visible inmediatamente para debug -->
+    <div id="hero-content" class="absolute inset-0 z-30 flex flex-col justify-center items-center text-center px-4">
+      <div class="hero-logo mb-8">
+        <img 
+          src="/assets/logo.png" 
+          alt="Cuba Tattoo Studio" 
+          class="w-20 h-20 md:w-28 md:h-28 mx-auto drop-shadow-2xl filter brightness-110"
+        />
+      </div>
+      
+      <h1 class="hero-title text-4xl md:text-6xl lg:text-7xl font-rye font-bold text-white mb-6 drop-shadow-lg leading-tight max-w-4xl">
+        CUBA TATTOO STUDIO
+      </h1>
+      
+      <p class="hero-subtitle text-lg md:text-xl lg:text-2xl text-gray-200 mb-8 max-w-2xl leading-relaxed">
+        Arte en la piel, contado en cada trazo
+      </p>
+      
+      <div class="hero-cta">
+        <span class="text-sm uppercase tracking-wider text-white/70 animate-pulse">
+          Sitio funcionando correctamente
+        </span>
+        <div class="w-px h-8 bg-white/50 mx-auto mt-2"></div>
+      </div>
+    </div>
   </div>
 </section>
 <style>
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(40px); }
-  to { opacity: 1; transform: none; }
-}
-.animate-fade-in {
-  animation: fade-in 1.1s cubic-bezier(.4,0,.2,1) both;
-}
-.animate-fade-in.delay-100 { animation-delay: 0.1s; }
-.animate-fade-in.delay-200 { animation-delay: 0.2s; }
+  /* Hero specific styles */
+  #video_scrub_01 {
+    position: relative;
+    width: 100%;
+  }
+  
+  .pinned-container {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  #hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  /* Animated background effects */
+  .hero-bg {
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(255,255,255,0.08) 0%, transparent 50%),
+      linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+    animation: heroBackgroundShift 20s ease-in-out infinite;
+  }
+  
+  @keyframes heroBackgroundShift {
+    0%, 100% { 
+      background-position: 0% 0%, 100% 0%, 0% 100%, 0% 0%; 
+    }
+    50% { 
+      background-position: 100% 100%, 0% 100%, 100% 0%, 100% 100%; 
+    }
+  }
+  
+  /* Ink splatter effects */
+  .ink-effect {
+    pointer-events: none;
+  }
+  
+  .ink-splatter {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    animation: inkFloat 8s ease-in-out infinite;
+  }
+  
+  .ink-splatter-1 {
+    width: 200px;
+    height: 200px;
+    top: 10%;
+    left: 15%;
+    animation-delay: 0s;
+  }
+  
+  .ink-splatter-2 {
+    width: 150px;
+    height: 150px;
+    top: 60%;
+    right: 20%;
+    animation-delay: 2.5s;
+  }
+  
+  .ink-splatter-3 {
+    width: 100px;
+    height: 100px;
+    bottom: 15%;
+    left: 30%;
+    animation-delay: 5s;
+  }
+  
+  @keyframes inkFloat {
+    0%, 100% {
+      transform: translateY(0px) scale(1);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translateY(-20px) scale(1.1);
+      opacity: 0.1;
+    }
+  }
+  
+  /* Particle effects */
+  .particles {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleFloat 15s linear infinite;
+  }
+  
+  .particle-1 {
+    width: 4px;
+    height: 4px;
+    left: 10%;
+    animation-delay: 0s;
+  }
+  
+  .particle-2 {
+    width: 6px;
+    height: 6px;
+    left: 30%;
+    animation-delay: 3s;
+  }
+  
+  .particle-3 {
+    width: 3px;
+    height: 3px;
+    left: 50%;
+    animation-delay: 6s;
+  }
+  
+  .particle-4 {
+    width: 5px;
+    height: 5px;
+    left: 70%;
+    animation-delay: 9s;
+  }
+  
+  .particle-5 {
+    width: 4px;
+    height: 4px;
+    left: 90%;
+    animation-delay: 12s;
+  }
+  
+  @keyframes particleFloat {
+    0% {
+      transform: translateY(100vh) translateX(0px);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.5;
+    }
+    90% {
+      opacity: 0.5;
+    }
+    100% {
+      transform: translateY(-100px) translateX(50px);
+      opacity: 0;
+    }
+  }
+  
+  .parallax-bg {
+    transform: translateZ(0); /* Force GPU acceleration */
+  }
+  
+  .hero-title {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .hero-subtitle {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+  }
+  
+  /* Loading states for video */
+  #hero-video[style*="display: none"] + .hero-bg {
+    opacity: 1;
+  }
+  
+  #hero-video:not([style*="display: none"]) + .hero-bg {
+    opacity: 0.3;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2.5rem;
+      line-height: 1.1;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.1rem;
+    }
+    
+    .ink-splatter {
+      transform: scale(0.7);
+    }
+    
+    .particle {
+      transform: scale(0.8);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+  }
 </style>
 
 <script>
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
 gsap.registerPlugin(ScrollTrigger);
 
-function lerp(a, b, n) {
+// Smooth lerp function for video scrubbing
+function lerp(a: number, b: number, n: number) {
   return (1 - n) * a + n * b;
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  const video = document.getElementById('hero-video');
-  const pin = document.querySelector('#video_scrub_01 .pinned-container');
-  const content = document.getElementById('hero-content');
-
-  if (!(video instanceof HTMLVideoElement) || !pin || !content) return;
-
+document.addEventListener('DOMContentLoaded', () => {
+  const video = document.getElementById('hero-video') as HTMLVideoElement | null;
+  const heroContent = document.getElementById('hero-content');
+  const pinnedContainer = document.querySelector('#video_scrub_01 .pinned-container');
+  const heroSection = document.getElementById('video_scrub_01');
+  
+  // Early return if essential elements don't exist
+  if (!heroContent || !pinnedContainer || !heroSection) {
+    console.warn('Essential hero elements not found');
+    return;
+  }
+  
   let targetTime = 0;
   let currentTime = 0;
-  let rafId;
-
-  function updateVideo() {
-    const vid = video as HTMLVideoElement | null;
-    if (vid && typeof vid.currentTime === 'number') {
-      currentTime = lerp(currentTime, targetTime, 0.2);
-      vid.currentTime = currentTime;
-    }
-    rafId = requestAnimationFrame(updateVideo);
+  let rafId: number | null = null;
+  let isVideoReady = false;
+  let hasWorkingVideo = false;
+  
+  // Check if video is available and working
+  function checkVideoAvailability() {
+    if (!video) return false;
+    
+    // Test if video source is accessible
+    return new Promise<boolean>((resolve) => {
+      const testVideo = video.cloneNode() as HTMLVideoElement;
+      testVideo.addEventListener('loadedmetadata', () => {
+        resolve(testVideo.duration > 0);
+      });
+      testVideo.addEventListener('error', () => {
+        resolve(false);
+      });
+      // Set a timeout to avoid hanging
+      setTimeout(() => resolve(false), 2000);
+      testVideo.load();
+    });
   }
-
-  video.addEventListener('loadedmetadata', () => {
-    const scrubDuration = window.innerHeight * 3;
-    video.currentTime = 0;
-    video.pause();
-    currentTime = 0;
-    targetTime = 0;
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(updateVideo);
-
-    ScrollTrigger.create({
-      trigger: pin,
+  
+  // Smooth video scrubbing with RAF
+  function updateVideoTime() {
+    if (!isVideoReady || !video || !hasWorkingVideo) return;
+    
+    currentTime = lerp(currentTime, targetTime, 0.15);
+    video.currentTime = Math.min(currentTime, video.duration - 0.1);
+    
+    if (Math.abs(currentTime - targetTime) > 0.01) {
+      rafId = requestAnimationFrame(updateVideoTime);
+    }
+  }
+  
+  // Initialize hero animations and scroll triggers
+  function initHero() {
+    // Initial setup for all elements
+    gsap.set(heroContent, { opacity: 0, y: 50 });
+    gsap.set('.hero-logo img', { scale: 0.8, opacity: 0 });
+    gsap.set('.hero-title', { opacity: 0, y: 30 });
+    gsap.set('.hero-subtitle', { opacity: 0, y: 20 });
+    gsap.set('.hero-cta', { opacity: 0, y: 15 });
+    
+    // Create main timeline for hero content
+    const heroTimeline = gsap.timeline({ paused: true });
+    
+    heroTimeline
+      .to('.hero-logo img', { 
+        scale: 1, 
+        opacity: 1, 
+        duration: 1.2, 
+        ease: "power2.out" 
+      })
+      .to('.hero-title', { 
+        opacity: 1, 
+        y: 0, 
+        duration: 1, 
+        ease: "power2.out" 
+      }, "-=0.6")
+      .to('.hero-subtitle', { 
+        opacity: 1, 
+        y: 0, 
+        duration: 0.8, 
+        ease: "power2.out" 
+      }, "-=0.4")
+      .to('.hero-cta', { 
+        opacity: 1, 
+        y: 0, 
+        duration: 0.6, 
+        ease: "power2.out" 
+      }, "-=0.3");
+    
+    // Setup video if available
+    if (hasWorkingVideo && video) {
+      isVideoReady = true;
+      video.currentTime = 0;
+      video.pause();
+      video.style.display = 'block';
+      video.style.opacity = '0.6';
+    }
+    
+    // Main ScrollTrigger for pinning and animations
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: heroSection,
       start: 'top top',
-      end: `+=${scrubDuration}`,
-      pin: true,
-      scrub: true,
+      end: () => `+=${window.innerHeight * (hasWorkingVideo ? 2.5 : 1.5)}`, // Shorter without video
+      pin: pinnedContainer,
+      scrub: 1,
       anticipatePin: 1,
-      onUpdate: self => {
+      invalidateOnRefresh: true,
+      
+      onUpdate: (self) => {
         const progress = self.progress;
-        targetTime = progress * (video.duration || 1);
-        if (progress > 0.95) {
-          gsap.to(content, { opacity: 1, duration: 0.7, overwrite: 'auto' });
+        
+        // Video scrubbing (only if video is available)
+        if (hasWorkingVideo && video && video.duration) {
+          targetTime = progress * (video.duration - 0.1);
+          
+          if (rafId) cancelAnimationFrame(rafId);
+          rafId = requestAnimationFrame(updateVideoTime);
+        }
+        
+        // Content appearance logic
+        const contentThreshold = hasWorkingVideo ? 0.7 : 0.3;
+        if (progress > contentThreshold) {
+          // Show content progressively
+          const contentProgress = (progress - contentThreshold) / (1 - contentThreshold);
+          gsap.set(heroContent, { opacity: contentProgress });
+          heroTimeline.progress(contentProgress);
         } else {
-          gsap.to(content, { opacity: 0, duration: 0.4, overwrite: 'auto' });
+          // Hide content during intro phase
+          gsap.set(heroContent, { opacity: 0 });
+          heroTimeline.progress(0);
+        }
+        
+        // Parallax effects
+        gsap.set('.parallax-bg', {
+          y: progress * -50,
+          scale: 1 + progress * 0.1
+        });
+        
+        // Animate ink splatters
+        gsap.set('.ink-splatter', {
+          y: progress * -30,
+          rotation: progress * 15
+        });
+        
+        // Enhanced particle movement
+        gsap.set('.particle', {
+          y: progress * -100,
+          x: Math.sin(progress * Math.PI * 2) * 20
+        });
+      },
+      
+      onLeave: () => {
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
         }
       },
-      onLeave: () => {
-        if (rafId) cancelAnimationFrame(rafId);
-      },
+      
       onEnterBack: () => {
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(updateVideo);
+        if (!rafId && isVideoReady && hasWorkingVideo) {
+          rafId = requestAnimationFrame(updateVideoTime);
+        }
       }
     });
+    
+    // Cleanup on refresh
+    ScrollTrigger.addEventListener('refresh', () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    });
+  }
+  
+  // Initialize hero with or without video
+  async function setupHero() {
+    // Check video availability
+    if (video) {
+      hasWorkingVideo = await checkVideoAvailability();
+      console.log(`Video available: ${hasWorkingVideo}`);
+    }
+    
+    // Initialize hero regardless of video status
+    initHero();
+    
+    // If video is available, set up video-specific handlers
+    if (hasWorkingVideo && video) {
+      video.addEventListener('loadedmetadata', () => {
+        console.log('Video metadata loaded');
+      });
+      
+      video.addEventListener('canplay', () => {
+        console.log('Video can play');
+      });
+    }
+  }
+  
+  // Start setup
+  setupHero();
+  
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+    }
+    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
   });
 });
 </script>

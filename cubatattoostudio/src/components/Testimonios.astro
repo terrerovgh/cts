@@ -11,7 +11,7 @@ const { testimonios = [
   <div class="container mx-auto">
     <h2 class="text-4xl md:text-5xl font-rye font-bold mb-12 text-center">Testimonios</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-      {testimonios.map(t => (
+      {testimonios.map((t: any) => (
         <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center fade-in-testimonio hover:scale-105 transition-transform duration-300">
           <span class="text-7xl text-gray-200 mb-4">“</span>
           <p class="text-lg text-center mb-4 text-gray-800">{t.texto}</p>
@@ -30,7 +30,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 window.addEventListener('DOMContentLoaded', () => {
-  gsap.utils.toArray('.fade-in-testimonio').forEach((el, i) => {
+  gsap.utils.toArray<Element>('.fade-in-testimonio').forEach((el, i) => {
     gsap.from(el, {
       opacity: 0,
       y: 60,
