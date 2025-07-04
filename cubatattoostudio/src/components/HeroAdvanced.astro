@@ -1,0 +1,389 @@
+---
+// Hero avanzado con animaciones GSAP estilo GTA VI
+---
+
+<!-- Hero Section with GTA VI-style Animation -->
+<section id="video_scrub_01" class="hero-section relative min-h-screen bg-black overflow-hidden">
+  <!-- Pinned Container -->
+  <div class="pinned-container relative min-h-screen">
+    
+    <!-- Background Video (opcional - fallback a gradient) -->
+    <video 
+      id="hero-video" 
+      class="absolute inset-0 w-full h-full object-cover opacity-60" 
+      muted 
+      playsinline 
+      preload="metadata"
+      poster="/assets/logo.png"
+    >
+      <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+    </video>
+    
+    <!-- Fallback animated background -->
+    <div class="hero-bg absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black"></div>
+    
+    <!-- Animated ink splatter effect -->
+    <div class="ink-effect absolute inset-0 opacity-20">
+      <div class="ink-splatter ink-splatter-1"></div>
+      <div class="ink-splatter ink-splatter-2"></div>
+      <div class="ink-splatter ink-splatter-3"></div>
+    </div>
+    
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/90"></div>
+    
+    <!-- Parallax Layers -->
+    <div class="parallax-bg absolute inset-0 z-10">
+      <!-- Floating particles effect -->
+      <div class="particles">
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        <div class="particle particle-5"></div>
+      </div>
+    </div>
+    
+    <!-- Initial Hero Content (aparece al inicio) -->
+    <div id="hero-initial" class="absolute inset-0 z-20 flex flex-col justify-center items-center text-center px-4">
+      <div class="hero-logo">
+        <img 
+          src="/assets/logo.png" 
+          alt="Cuba Tattoo Studio" 
+          class="w-20 h-20 md:w-28 md:h-28 mx-auto drop-shadow-2xl filter brightness-110"
+        />
+      </div>
+      
+      <h1 class="hero-title-initial text-3xl md:text-4xl font-rye font-bold text-white mt-6 mb-4 drop-shadow-lg">
+        BIENVENIDO
+      </h1>
+      
+      <button class="hero-btn px-8 py-3 bg-white text-black font-bold rounded hover:bg-gray-200 transition-colors">
+        Descubre el Arte
+      </button>
+    </div>
+    
+    <!-- Masked Large Text (aparece durante el scroll) -->
+    <div id="hero-masked-text" class="absolute inset-0 z-15 flex items-center justify-center opacity-0">
+      <h1 class="masked-title text-[20vw] md:text-[15vw] font-rye font-black text-white leading-none"
+          style="text-shadow: 0 0 50px rgba(255,255,255,0.3); transform: scale(3.5);">
+        CUBA TATTOO
+      </h1>
+    </div>
+    
+    <!-- Final Hero Content (aparece al final) -->
+    <div id="hero-final" class="absolute inset-0 z-25 flex flex-col justify-center items-center text-center px-4 opacity-0">
+      <div class="final-logo mb-8">
+        <img 
+          src="/assets/logo.png" 
+          alt="Cuba Tattoo Studio" 
+          class="w-32 h-32 mx-auto drop-shadow-2xl"
+        />
+      </div>
+      
+      <h1 class="final-title text-5xl md:text-7xl font-rye font-bold text-white mb-6 drop-shadow-lg">
+        CUBA TATTOO STUDIO
+      </h1>
+      
+      <p class="final-subtitle text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl">
+        Arte en la piel, contado en cada trazo
+      </p>
+      
+      <!-- Date box reveal -->
+      <div id="date-box" class="bg-white text-black px-6 py-2 rounded font-bold mb-6" style="height: 0; overflow: hidden;">
+        <p>Desde 2020</p>
+      </div>
+      
+      <!-- Logo VI style (like GTA VI) -->
+      <div id="logo-vi" class="text-8xl md:text-9xl font-black text-white opacity-0" style="text-shadow: 0 0 20px rgba(255,255,255,0.5);">
+        CS
+      </div>
+      
+      <div class="final-cta mt-8">
+        <span class="text-sm uppercase tracking-wider text-white/70 animate-pulse">
+          Desliza para continuar
+        </span>
+        <div class="w-px h-8 bg-white/50 mx-auto mt-2"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Hero specific styles */
+  .hero-section {
+    position: relative;
+    width: 100%;
+  }
+  
+  .pinned-container {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  #hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  /* Animated background effects */
+  .hero-bg {
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(255,255,255,0.08) 0%, transparent 50%),
+      linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+    animation: backgroundPulse 8s ease-in-out infinite;
+  }
+  
+  @keyframes backgroundPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+  
+  /* Ink splatter effects */
+  .ink-splatter {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .ink-splatter-1 {
+    width: 200px;
+    height: 200px;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+  
+  .ink-splatter-2 {
+    width: 150px;
+    height: 150px;
+    top: 60%;
+    right: 15%;
+    animation-delay: 2s;
+  }
+  
+  .ink-splatter-3 {
+    width: 100px;
+    height: 100px;
+    bottom: 20%;
+    left: 60%;
+    animation-delay: 4s;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) scale(1); opacity: 0.2; }
+    50% { transform: translateY(-20px) scale(1.1); opacity: 0.3; }
+  }
+  
+  /* Floating particles */
+  .particles {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    animation: particleFloat 8s linear infinite;
+  }
+  
+  .particle-1 { left: 20%; animation-delay: 0s; }
+  .particle-2 { left: 40%; animation-delay: 2s; }
+  .particle-3 { left: 60%; animation-delay: 4s; }
+  .particle-4 { left: 80%; animation-delay: 6s; }
+  .particle-5 { left: 30%; animation-delay: 1s; }
+  
+  @keyframes particleFloat {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px) scale(1); opacity: 0; }
+  }
+  
+  /* Typography effects */
+  .masked-title {
+    background: linear-gradient(45deg, #ffffff, #cccccc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    will-change: transform;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .masked-title {
+      font-size: 25vw;
+    }
+    
+    .final-title {
+      font-size: 3rem;
+    }
+    
+    #logo-vi {
+      font-size: 4rem;
+    }
+  }
+</style>
+
+<script>
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
+
+// Hero Animation Script (ejecuta solo en el cliente)
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('🎬 Iniciando animaciones Hero estilo GTA VI');
+  
+  // Verificar que los elementos existen
+  const heroSection = document.querySelector('.hero-section');
+  const heroVideo = document.getElementById('hero-video');
+  const heroInitial = document.getElementById('hero-initial');
+  const heroMaskedText = document.getElementById('hero-masked-text');
+  const heroFinal = document.getElementById('hero-final');
+  const dateBox = document.getElementById('date-box');
+  const logoVI = document.getElementById('logo-vi');
+  const maskedTitle = document.querySelector('.masked-title');
+  
+  if (!heroSection) {
+    console.warn('Hero section no encontrada');
+    return;
+  }
+  
+  // Setup video if available
+  if (heroVideo) {
+    heroVideo.addEventListener('loadedmetadata', () => {
+      console.log('✅ Video del hero cargado');
+    });
+    
+    heroVideo.addEventListener('error', () => {
+      console.warn('⚠️ Error cargando video del hero, usando fallback');
+      heroVideo.style.display = 'none';
+    });
+  }
+  
+  // Create main timeline with ScrollTrigger
+  const mainTimeline = gsap.timeline({
+    scrollTrigger: {
+      trigger: heroSection,
+      start: 'top top',
+      end: '+=300%', // 3x la altura de la pantalla para la animación completa
+      scrub: 1, // Smooth scrubbing
+      pin: true,
+      anticipatePin: 1,
+      onUpdate: (self) => {
+        // Control video playback based on scroll progress
+        if (heroVideo && heroVideo.duration) {
+          heroVideo.currentTime = heroVideo.duration * self.progress;
+        }
+      }
+    }
+  });
+  
+  // SECUENCIA DE ANIMACIÓN ESTILO GTA VI
+  
+  // 1. Fade out contenido inicial (0-25%)
+  mainTimeline
+    .to([heroInitial, '.hero-logo', '.hero-title-initial', '.hero-btn'], {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      ease: 'power2.out'
+    })
+    
+    // 2. Aparecer y hacer zoom out del texto enmascarado gigante (25-50%)
+    .to(heroMaskedText, {
+      opacity: 1,
+      duration: 0.5,
+      ease: 'power1.out'
+    }, 0.3)
+    
+    .to(maskedTitle, {
+      scale: 1,
+      duration: 1.5,
+      ease: 'power2.out'
+    }, 0.3)
+    
+    // Parallax en el video/background
+    .to('.hero-bg', {
+      scale: 1,
+      duration: 1.5,
+      ease: 'power1.out'
+    }, 0.3)
+    
+    // 3. Mover y reducir el texto enmascarado (50-70%)
+    .to(maskedTitle, {
+      scale: 0.2,
+      y: '-30vh',
+      duration: 1.2,
+      ease: 'power2.inOut'
+    }, 2)
+    
+    // Contraer imagen de fondo
+    .to('.hero-bg', {
+      scale: 0.8,
+      opacity: 0.7,
+      duration: 1.2,
+      ease: 'power2.inOut'
+    }, 2)
+    
+    // 4. Aparecer contenido final (70-85%)
+    .to(heroFinal, {
+      opacity: 1,
+      duration: 0.8,
+      ease: 'power1.out'
+    }, 3)
+    
+    .to(['.final-logo', '.final-title', '.final-subtitle'], {
+      y: 0,
+      opacity: 1,
+      duration: 1,
+      stagger: 0.2,
+      ease: 'back.out(1.7)'
+    }, 3.2)
+    
+    // 5. Expandir caja de fecha (85-90%)
+    .to(dateBox, {
+      height: 'auto',
+      duration: 0.6,
+      ease: 'power2.out'
+    }, 4)
+    
+    // 6. Logo final con bounce (90-100%)
+    .to(logoVI, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.8,
+      ease: 'bounce.out',
+      onComplete: () => {
+        console.log('🎉 Animación Hero completada');
+      }
+    }, 4.5)
+    
+    // Ocultar elementos no necesarios al final
+    .to(['.hero-btn', heroMaskedText], {
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power1.out'
+    }, 4.8);
+  
+  // Refresh ScrollTrigger after setup
+  ScrollTrigger.refresh();
+  
+  console.log('✅ Hero animaciones configuradas');
+});
+</script>

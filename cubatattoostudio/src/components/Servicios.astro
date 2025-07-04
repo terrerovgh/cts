@@ -1,0 +1,47 @@
+---
+// Props: servicios (array de objetos {icono, titulo, descripcion})
+const { servicios = [
+  { icono: '🖋️', titulo: 'Tatuajes personalizados', descripcion: 'Diseños únicos adaptados a tu piel y estilo.' },
+  { icono: '🎨', titulo: 'Cobertura (cover-up)', descripcion: 'Transformamos tatuajes antiguos en nuevas obras.' },
+  { icono: '⚡', titulo: 'Tatuaje rápido', descripcion: 'Flash tattoos y piezas pequeñas en el momento.' },
+  { icono: '💎', titulo: 'Piercings', descripcion: 'Perforaciones seguras y profesionales.' }
+] } = Astro.props;
+---
+
+<section id="servicios" class="section py-24 md:py-36 bg-white text-black">
+  <div class="container mx-auto">
+    <h2 class="text-4xl md:text-5xl font-rye font-bold mb-12 text-center">Servicios</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+      {servicios.map((s: any) => (
+        <div class="flex items-start gap-6 bg-gray-50 rounded-xl shadow-lg p-8 fade-in-servicio hover:scale-105 transition-transform duration-300">
+          <span class="text-5xl md:text-6xl drop-shadow-lg">{s.icono}</span>
+          <div>
+            <h3 class="text-2xl font-semibold mb-2">{s.titulo}</h3>
+            <p class="text-gray-600 text-lg">{s.descripcion}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
+window.addEventListener('DOMContentLoaded', () => {
+  gsap.utils.toArray('.fade-in-servicio').forEach((el, i) => {
+    gsap.from(el as Element, {
+      opacity: 0,
+      y: 60,
+      duration: 0.7,
+      delay: i * 0.15,
+      scrollTrigger: {
+        trigger: el as Element,
+        start: 'top 80%',
+        toggleActions: 'play none none none',
+      }
+    });
+  });
+});
+</script>

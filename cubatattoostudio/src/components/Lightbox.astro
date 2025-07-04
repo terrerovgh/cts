@@ -1,0 +1,504 @@
+---
+export interface Props {
+  id?: string;
+}
+
+const { id = "gallery-lightbox" } = Astro.props;
+---
+
+<!-- Lightbox Modal Component -->
+<div id={id} class="lightbox-modal fixed inset-0 z-50 hidden">
+  <!-- Background Overlay -->
+  <div class="lightbox-backdrop absolute inset-0 bg-black bg-opacity-90 backdrop-blur-sm"></div>
+  
+  <!-- Modal Container -->
+  <div class="lightbox-container relative w-full h-full flex items-center justify-center p-4">
+    
+    <!-- Close Button -->
+    <button class="lightbox-close absolute top-6 right-6 z-60 w-12 h-12 bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm border border-white border-opacity-30 rounded-full flex items-center justify-center text-white transition-all duration-300">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    
+    <!-- Navigation Buttons -->
+    <button class="lightbox-prev absolute left-6 top-1/2 transform -translate-y-1/2 z-60 w-12 h-12 bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm border border-white border-opacity-30 rounded-full flex items-center justify-center text-white transition-all duration-300">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
+    
+    <button class="lightbox-next absolute right-6 top-1/2 transform -translate-y-1/2 z-60 w-12 h-12 bg-white bg-opacity-20 hover:bg-opacity-30 backdrop-blur-sm border border-white border-opacity-30 rounded-full flex items-center justify-center text-white transition-all duration-300">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </button>
+    
+    <!-- Content Area -->
+    <div class="lightbox-content flex flex-col md:flex-row items-center justify-center w-full h-full max-w-7xl mx-auto gap-8">
+      
+      <!-- Image/Video Container -->
+      <div class="lightbox-media-container flex-1 flex items-center justify-center">
+        <div class="lightbox-media-wrapper relative max-w-full max-h-full">
+          <img 
+            id="lightbox-image" 
+            class="lightbox-image max-w-full max-h-full object-contain rounded-lg shadow-2xl opacity-0"
+            src="" 
+            alt="" 
+          />
+          <video 
+            id="lightbox-video" 
+            class="lightbox-video max-w-full max-h-full object-contain rounded-lg shadow-2xl opacity-0 hidden"
+            controls
+            muted
+            playsinline
+          >
+          </video>
+          
+          <!-- Loading Spinner -->
+          <div class="lightbox-loading absolute inset-0 flex items-center justify-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Info Panel -->
+      <div class="lightbox-info w-full md:w-80 lg:w-96 p-6 bg-black bg-opacity-50 backdrop-blur-sm rounded-xl border border-white border-opacity-20">
+        
+        <!-- Artist Badge -->
+        <div class="lightbox-artist-badge inline-block px-3 py-1 bg-white bg-opacity-20 rounded-full text-sm font-medium text-white mb-4">
+          <span id="lightbox-artist">Artista</span>
+        </div>
+        
+        <!-- Title -->
+        <h3 id="lightbox-title" class="text-2xl md:text-3xl font-bold text-white mb-3 leading-tight">
+          Título del trabajo
+        </h3>
+        
+        <!-- Category -->
+        <div class="lightbox-category inline-block px-2 py-1 bg-white bg-opacity-10 rounded text-xs uppercase tracking-wider text-gray-300 mb-4">
+          <span id="lightbox-category">Categoría</span>
+        </div>
+        
+        <!-- Description -->
+        <p id="lightbox-description" class="text-gray-300 text-base leading-relaxed mb-6">
+          Descripción del trabajo artístico...
+        </p>
+        
+        <!-- Stats -->
+        <div class="lightbox-stats grid grid-cols-2 gap-4 mb-6">
+          <div class="stat-item text-center p-3 bg-white bg-opacity-10 rounded-lg">
+            <div class="text-lg font-bold text-white">
+              <span id="lightbox-index">01</span>
+            </div>
+            <div class="text-xs text-gray-400 uppercase tracking-wide">
+              Trabajo
+            </div>
+          </div>
+          <div class="stat-item text-center p-3 bg-white bg-opacity-10 rounded-lg">
+            <div class="text-lg font-bold text-white">
+              <span id="lightbox-total">20</span>
+            </div>
+            <div class="text-xs text-gray-400 uppercase tracking-wide">
+              Total
+            </div>
+          </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="lightbox-actions flex gap-3">
+          <button class="flex-1 px-4 py-2 bg-white text-black hover:bg-gray-200 transition-colors duration-300 rounded-lg font-semibold text-sm">
+            Consultar
+          </button>
+          <button class="px-4 py-2 bg-transparent border border-white border-opacity-30 text-white hover:bg-white hover:bg-opacity-20 transition-all duration-300 rounded-lg font-semibold text-sm">
+            Compartir
+          </button>
+        </div>
+        
+      </div>
+      
+    </div>
+    
+    <!-- Counter -->
+    <div class="lightbox-counter absolute bottom-6 left-1/2 transform -translate-x-1/2 px-4 py-2 bg-black bg-opacity-50 backdrop-blur-sm border border-white border-opacity-20 rounded-full text-white text-sm font-medium">
+      <span id="lightbox-current">1</span>
+      <span class="mx-2">/</span>
+      <span id="lightbox-total-count">20</span>
+    </div>
+    
+  </div>
+</div>
+
+<style>
+  .lightbox-modal {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .lightbox-modal.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .lightbox-media-wrapper {
+    position: relative;
+    max-height: 80vh;
+    max-width: 80vw;
+  }
+  
+  .lightbox-image,
+  .lightbox-video {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: scale(0.95);
+  }
+  
+  .lightbox-image.loaded,
+  .lightbox-video.loaded {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .lightbox-loading {
+    transition: opacity 0.3s ease;
+  }
+  
+  .lightbox-loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  /* Navigation button hover effects */
+  .lightbox-prev:hover,
+  .lightbox-next:hover,
+  .lightbox-close:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .lightbox-content {
+      flex-direction: column;
+      padding: 1rem;
+    }
+    
+    .lightbox-info {
+      width: 100%;
+      margin-top: 2rem;
+    }
+    
+    .lightbox-media-wrapper {
+      max-height: 60vh;
+      max-width: 95vw;
+    }
+    
+    .lightbox-prev,
+    .lightbox-next {
+      display: none;
+    }
+  }
+  
+  /* Keyboard navigation indicator */
+  .lightbox-modal.show-keyboard-hint::before {
+    content: "Usa ← → para navegar, ESC para cerrar";
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    z-index: 70;
+    animation: fadeInOut 3s ease-in-out;
+  }
+  
+  @keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    20%, 80% { opacity: 1; }
+  }
+</style>
+
+<script>
+import gsap from 'gsap';
+
+interface LightboxItem {
+  src: string;
+  alt: string;
+  type: 'image' | 'video';
+  category: string;
+  artist: string;
+  description: string;
+  index: number;
+}
+
+class LightboxManager {
+  private lightboxId: string;
+  private currentIndex: number;
+  private items: LightboxItem[];
+  private isOpen: boolean;
+  private lightbox: HTMLElement | null;
+  private backdrop: HTMLElement | null;
+  private closeBtn: HTMLElement | null;
+  private prevBtn: HTMLElement | null;
+  private nextBtn: HTMLElement | null;
+  private image: HTMLImageElement | null;
+  private video: HTMLVideoElement | null;
+  private loading: HTMLElement | null;
+  private titleEl: HTMLElement | null;
+  private artistEl: HTMLElement | null;
+  private categoryEl: HTMLElement | null;
+  private descriptionEl: HTMLElement | null;
+  private indexEl: HTMLElement | null;
+  private totalEl: HTMLElement | null;
+  private currentEl: HTMLElement | null;
+  private totalCountEl: HTMLElement | null;
+
+  constructor(lightboxId: string = 'gallery-lightbox') {
+    this.lightboxId = lightboxId;
+    this.currentIndex = 0;
+    this.items = [];
+    this.isOpen = false;
+    this.lightbox = null;
+    this.backdrop = null;
+    this.closeBtn = null;
+    this.prevBtn = null;
+    this.nextBtn = null;
+    this.image = null;
+    this.video = null;
+    this.loading = null;
+    this.titleEl = null;
+    this.artistEl = null;
+    this.categoryEl = null;
+    this.descriptionEl = null;
+    this.indexEl = null;
+    this.totalEl = null;
+    this.currentEl = null;
+    this.totalCountEl = null;
+    
+    this.init();
+  }
+  
+  init() {
+    document.addEventListener('DOMContentLoaded', () => {
+      this.lightbox = document.getElementById(this.lightboxId);
+      this.setupElements();
+      this.bindEvents();
+      this.collectGalleryItems();
+    });
+  }
+  
+  setupElements() {
+    if (!this.lightbox) return;
+    
+    this.backdrop = this.lightbox.querySelector('.lightbox-backdrop');
+    this.closeBtn = this.lightbox.querySelector('.lightbox-close');
+    this.prevBtn = this.lightbox.querySelector('.lightbox-prev');
+    this.nextBtn = this.lightbox.querySelector('.lightbox-next');
+    
+    this.image = this.lightbox.querySelector('#lightbox-image') as HTMLImageElement;
+    this.video = this.lightbox.querySelector('#lightbox-video') as HTMLVideoElement;
+    this.loading = this.lightbox.querySelector('.lightbox-loading');
+    
+    this.titleEl = this.lightbox.querySelector('#lightbox-title');
+    this.artistEl = this.lightbox.querySelector('#lightbox-artist');
+    this.categoryEl = this.lightbox.querySelector('#lightbox-category');
+    this.descriptionEl = this.lightbox.querySelector('#lightbox-description');
+    this.indexEl = this.lightbox.querySelector('#lightbox-index');
+    this.totalEl = this.lightbox.querySelector('#lightbox-total');
+    this.currentEl = this.lightbox.querySelector('#lightbox-current');
+    this.totalCountEl = this.lightbox.querySelector('#lightbox-total-count');
+  }
+  
+  bindEvents() {
+    if (!this.lightbox) return;
+    
+    // Close events
+    this.closeBtn?.addEventListener('click', () => this.close());
+    this.backdrop?.addEventListener('click', () => this.close());
+    
+    // Navigation events
+    this.prevBtn?.addEventListener('click', () => this.prev());
+    this.nextBtn?.addEventListener('click', () => this.next());
+    
+    // Keyboard events
+    document.addEventListener('keydown', (e) => {
+      if (!this.isOpen) return;
+      
+      switch(e.key) {
+        case 'Escape':
+          this.close();
+          break;
+        case 'ArrowLeft':
+          this.prev();
+          break;
+        case 'ArrowRight':
+          this.next();
+          break;
+      }
+    });
+    
+    // Touch events for mobile
+    let startX = 0;
+    this.lightbox?.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    });
+    
+    this.lightbox?.addEventListener('touchend', (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          this.next();
+        } else {
+          this.prev();
+        }
+      }
+    });
+  }
+  
+  collectGalleryItems() {
+    // Collect items from gallery
+    const galleryItems = document.querySelectorAll('.gallery-slide, .work-item');
+    this.items = Array.from(galleryItems).map((item, index) => {
+      const img = item.querySelector('img, video') as HTMLImageElement | HTMLVideoElement;
+      return {
+        src: (img as any)?.src || (img as any)?.dataset?.src || '',
+        alt: (img as HTMLImageElement)?.alt || 'Trabajo artístico',
+        type: img?.tagName.toLowerCase() === 'video' ? 'video' as const : 'image' as const,
+        category: (item as HTMLElement).dataset.category || 'General',
+        artist: item.querySelector('.artist-badge')?.textContent || 'Cuba Tattoo Studio',
+        description: item.querySelector('.slide-title, .work-title')?.textContent || (img as HTMLImageElement)?.alt || 'Trabajo artístico',
+        index: index
+      };
+    });
+    
+    // Bind click events to gallery items
+    galleryItems.forEach((item, index) => {
+      const button = item.querySelector('.view-detail-btn, .work-item');
+      button?.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.open(index);
+      });
+    });
+  }
+  
+  open(index: number = 0) {
+    if (!this.lightbox || this.items.length === 0) return;
+    
+    this.currentIndex = Math.max(0, Math.min(index, this.items.length - 1));
+    this.isOpen = true;
+    
+    // Show lightbox
+    this.lightbox.classList.remove('hidden');
+    gsap.to(this.lightbox, {
+      opacity: 1,
+      duration: 0.3,
+      ease: 'power2.out',
+      onComplete: () => {
+        this.lightbox?.classList.add('active');
+        this.loadItem(this.currentIndex);
+      }
+    });
+    
+    // Disable body scroll
+    document.body.style.overflow = 'hidden';
+    
+    // Show keyboard hint after 1 second
+    setTimeout(() => {
+      this.lightbox?.classList.add('show-keyboard-hint');
+      setTimeout(() => {
+        this.lightbox?.classList.remove('show-keyboard-hint');
+      }, 3000);
+    }, 1000);
+  }
+  
+  close() {
+    if (!this.isOpen) return;
+    
+    this.isOpen = false;
+    
+    gsap.to(this.lightbox, {
+      opacity: 0,
+      duration: 0.3,
+      ease: 'power2.in',
+      onComplete: () => {
+        this.lightbox?.classList.remove('active');
+        this.lightbox?.classList.add('hidden');
+      }
+    });
+    
+    // Re-enable body scroll
+    document.body.style.overflow = '';
+  }
+  
+  prev() {
+    if (this.items.length <= 1) return;
+    this.currentIndex = (this.currentIndex - 1 + this.items.length) % this.items.length;
+    this.loadItem(this.currentIndex);
+  }
+  
+  next() {
+    if (this.items.length <= 1) return;
+    this.currentIndex = (this.currentIndex + 1) % this.items.length;
+    this.loadItem(this.currentIndex);
+  }
+  
+  loadItem(index: number) {
+    const item = this.items[index];
+    if (!item) return;
+    
+    // Show loading
+    this.loading?.classList.remove('hidden');
+    this.image?.classList.remove('loaded');
+    this.video?.classList.remove('loaded');
+    
+    // Update info
+    if (this.titleEl) this.titleEl.textContent = item.description;
+    if (this.artistEl) this.artistEl.textContent = item.artist;
+    if (this.categoryEl) this.categoryEl.textContent = item.category;
+    if (this.descriptionEl) this.descriptionEl.textContent = item.description;
+    if (this.indexEl) this.indexEl.textContent = (index + 1).toString().padStart(2, '0');
+    if (this.totalEl) this.totalEl.textContent = this.items.length.toString().padStart(2, '0');
+    if (this.currentEl) this.currentEl.textContent = (index + 1).toString();
+    if (this.totalCountEl) this.totalCountEl.textContent = this.items.length.toString();
+    
+    // Load media
+    if (item.type === 'video') {
+      this.image?.classList.add('hidden');
+      this.video?.classList.remove('hidden');
+      
+      if (this.video) {
+        this.video.src = item.src;
+        this.video.addEventListener('loadeddata', () => {
+          this.loading?.classList.add('hidden');
+          this.video?.classList.add('loaded');
+        }, { once: true });
+      }
+    } else {
+      this.video?.classList.add('hidden');
+      this.image?.classList.remove('hidden');
+      
+      if (this.image) {
+        this.image.src = item.src;
+        this.image.alt = item.alt;
+        this.image.addEventListener('load', () => {
+          this.loading?.classList.add('hidden');
+          this.image?.classList.add('loaded');
+        }, { once: true });
+      }
+    }
+  }
+}
+
+// Initialize lightbox when DOM is ready
+export default LightboxManager;
+
+// Auto-initialize if not imported as module
+if (typeof window !== 'undefined') {
+  (window as any).lightboxManager = new LightboxManager();
+}
+</script>

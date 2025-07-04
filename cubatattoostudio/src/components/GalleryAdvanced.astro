@@ -1,0 +1,500 @@
+---
+// Gallery con scroll infinito y lightbox
+---
+
+<section id="gallery" class="gallery-section relative min-h-screen bg-gradient-to-br from-white via-gray-100 to-white overflow-hidden">
+  <!-- Gallery Container -->
+  <div class="gallery-container relative w-full h-screen">
+    
+    <!-- Header -->
+    <div class="gallery-header absolute top-0 left-0 right-0 z-20 p-8">
+      <h2 class="text-4xl md:text-6xl font-rye font-bold text-black text-center mb-4">
+        Galería de Trabajos
+      </h2>
+      <p class="text-center text-gray-600 text-lg">
+        Cada obra cuenta una historia única
+      </p>
+    </div>
+
+    <!-- Gallery Slider -->
+    <div class="gallery-slider absolute inset-0 z-10">
+      
+      <!-- Slide 1 -->
+      <div class="gallery-slide active" data-slide="0">
+        <div class="slide-bg">
+          <img 
+            src="https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=1920&h=1080&fit=crop&crop=center" 
+            alt="Tatuaje Biomecánico" 
+            class="slide-image"
+          />
+        </div>
+        <div class="slide-content">
+          <h3 class="slide-title">Biomecánico</h3>
+          <p class="slide-description">Fusión entre lo orgánico y lo mecánico en una sinfonía de acero y piel</p>
+          <button class="slide-button" data-image="https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=1920&h=1080&fit=crop&crop=center">
+            Ver en grande
+          </button>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="gallery-slide" data-slide="1">
+        <div class="slide-bg">
+          <img 
+            src="https://images.unsplash.com/photo-1590736969955-71cc94901144?w=1920&h=1080&fit=crop&crop=center" 
+            alt="Realismo en Blanco y Negro" 
+            class="slide-image"
+          />
+        </div>
+        <div class="slide-content">
+          <h3 class="slide-title">Realismo</h3>
+          <p class="slide-description">Técnica fotorealista que captura cada detalle con precisión quirúrgica</p>
+          <button class="slide-button" data-image="https://images.unsplash.com/photo-1590736969955-71cc94901144?w=1920&h=1080&fit=crop&crop=center">
+            Ver en grande
+          </button>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="gallery-slide" data-slide="2">
+        <div class="slide-bg">
+          <img 
+            src="https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?w=1920&h=1080&fit=crop&crop=center" 
+            alt="Arte Tradicional" 
+            class="slide-image"
+          />
+        </div>
+        <div class="slide-content">
+          <h3 class="slide-title">Tradicional</h3>
+          <p class="slide-description">Diseños clásicos con líneas sólidas y colores vibrantes atemporales</p>
+          <button class="slide-button" data-image="https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?w=1920&h=1080&fit=crop&crop=center">
+            Ver en grande
+          </button>
+        </div>
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="gallery-slide" data-slide="3">
+        <div class="slide-bg">
+          <img 
+            src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=1920&h=1080&fit=crop&crop=center" 
+            alt="Tatuaje Minimalista" 
+            class="slide-image"
+          />
+        </div>
+        <div class="slide-content">
+          <h3 class="slide-title">Minimalista</h3>
+          <p class="slide-description">Elegancia en la simplicidad, líneas limpias y diseños esenciales</p>
+          <button class="slide-button" data-image="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=1920&h=1080&fit=crop&crop=center">
+            Ver en grande
+          </button>
+        </div>
+      </div>
+
+      <!-- Slide 5 -->
+      <div class="gallery-slide" data-slide="4">
+        <div class="slide-bg">
+          <img 
+            src="https://images.unsplash.com/photo-1618453292831-9ac5b7049ddd?w=1920&h=1080&fit=crop&crop=center" 
+            alt="Tatuaje Acuarela" 
+            class="slide-image"
+          />
+        </div>
+        <div class="slide-content">
+          <h3 class="slide-title">Acuarela</h3>
+          <p class="slide-description">Efectos líquidos únicos que parecen pinceladas sobre lienzo</p>
+          <button class="slide-button" data-image="https://images.unsplash.com/photo-1618453292831-9ac5b7049ddd?w=1920&h=1080&fit=crop&crop=center">
+            Ver en grande
+          </button>
+        </div>
+      </div>
+
+      <!-- Slide 6 -->
+      <div class="gallery-slide" data-slide="5">
+        <div class="slide-bg">
+          <img 
+            src="https://images.unsplash.com/photo-1598378667002-b9b67ac5ef0b?w=1920&h=1080&fit=crop&crop=center" 
+            alt="Tatuaje Geométrico" 
+            class="slide-image"
+          />
+        </div>
+        <div class="slide-content">
+          <h3 class="slide-title">Geométrico</h3>
+          <p class="slide-description">Patrones matemáticos perfectos que trascienden lo decorativo</p>
+          <button class="slide-button" data-image="https://images.unsplash.com/photo-1598378667002-b9b67ac5ef0b?w=1920&h=1080&fit=crop&crop=center">
+            Ver en grande
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Navigation Indicators -->
+    <div class="gallery-nav absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
+      <div class="flex space-x-3">
+        <button class="nav-dot active" data-slide="0"></button>
+        <button class="nav-dot" data-slide="1"></button>
+        <button class="nav-dot" data-slide="2"></button>
+        <button class="nav-dot" data-slide="3"></button>
+        <button class="nav-dot" data-slide="4"></button>
+        <button class="nav-dot" data-slide="5"></button>
+      </div>
+    </div>
+
+    <!-- Scroll Instructions -->
+    <div class="scroll-instructions absolute top-1/2 right-8 transform -translate-y-1/2 z-20 text-black/70">
+      <div class="writing-mode-vertical text-sm uppercase tracking-wider">
+        ↑ Scroll para navegar ↓
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="lightbox-overlay fixed inset-0 bg-black/90 z-50 hidden">
+    <div class="lightbox-container h-full w-full flex items-center justify-center p-8">
+      <img id="lightbox-image" src="" alt="" class="max-w-full max-h-full object-contain" />
+      <button id="lightbox-close" class="absolute top-8 right-8 text-white text-4xl hover:text-gray-300 transition-colors">
+        ×
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .gallery-section {
+    position: relative;
+  }
+  
+  .gallery-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .gallery-slider {
+    position: relative;
+    height: 100%;
+  }
+  
+  .gallery-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .gallery-slide.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .slide-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+  .slide-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.8) contrast(1.1);
+  }
+  
+  .slide-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: white;
+    max-width: 600px;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .slide-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-family: 'Rye', cursive;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .slide-description {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    opacity: 0.9;
+  }
+  
+  .slide-button {
+    background: white;
+    color: black;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .slide-button:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Navigation Dots */
+  .nav-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-dot.active {
+    background: black;
+    border-color: black;
+  }
+  
+  .nav-dot:hover {
+    transform: scale(1.2);
+  }
+  
+  /* Scroll Instructions */
+  .scroll-instructions {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+  
+  /* Lightbox */
+  .lightbox-overlay {
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+  }
+  
+  .lightbox-container {
+    position: relative;
+  }
+  
+  #lightbox-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 3rem;
+    line-height: 1;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .slide-title {
+      font-size: 2rem;
+    }
+    
+    .slide-description {
+      font-size: 1rem;
+    }
+    
+    .slide-content {
+      padding: 1.5rem;
+      max-width: 90%;
+    }
+    
+    .scroll-instructions {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+import { gsap } from 'gsap';
+import { Observer } from 'gsap/Observer';
+
+// Registrar plugins
+gsap.registerPlugin(Observer);
+
+// Variables globales para la galería
+let currentSlide = 0;
+let totalSlides = 6;
+let isAnimating = false;
+
+// Función para inicializar la galería
+function initGallery() {
+  console.log('🖼️ Inicializando Gallery...');
+  
+  const slides = document.querySelectorAll('.gallery-slide');
+  const dots = document.querySelectorAll('.nav-dot');
+  const lightboxButtons = document.querySelectorAll('.slide-button');
+  
+  // Configurar Observer para navegación con scroll
+  Observer.create({
+    target: '.gallery-section',
+    type: "wheel,touch,pointer",
+    wheelSpeed: -1,
+    onDown: () => !isAnimating && changeSlide(1),
+    onUp: () => !isAnimating && changeSlide(-1),
+    tolerance: 10,
+    preventDefault: true
+  });
+  
+  // Event listeners para los dots
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      if (!isAnimating && index !== currentSlide) {
+        goToSlide(index);
+      }
+    });
+  });
+  
+  // Event listeners para lightbox
+  lightboxButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+      const imageUrl = e.target.dataset.image;
+      openLightbox(imageUrl);
+    });
+  });
+  
+  // Cerrar lightbox
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  document.getElementById('lightbox').addEventListener('click', (e) => {
+    if (e.target.id === 'lightbox') {
+      closeLightbox();
+    }
+  });
+  
+  console.log('✅ Gallery inicializada');
+}
+
+// Función para cambiar slide
+function changeSlide(direction) {
+  const nextSlide = currentSlide + direction;
+  
+  if (nextSlide >= 0 && nextSlide < totalSlides) {
+    goToSlide(nextSlide);
+  }
+}
+
+// Función para ir a un slide específico
+function goToSlide(slideIndex) {
+  if (isAnimating || slideIndex === currentSlide) return;
+  
+  isAnimating = true;
+  
+  const currentSlideEl = document.querySelector(`.gallery-slide[data-slide="${currentSlide}"]`);
+  const nextSlideEl = document.querySelector(`.gallery-slide[data-slide="${slideIndex}"]`);
+  const currentDot = document.querySelector(`.nav-dot[data-slide="${currentSlide}"]`);
+  const nextDot = document.querySelector(`.nav-dot[data-slide="${slideIndex}"]`);
+  
+  // Timeline de transición
+  const tl = gsap.timeline({
+    onComplete: () => {
+      isAnimating = false;
+      currentSlide = slideIndex;
+    }
+  });
+  
+  // Animar salida del slide actual
+  tl.to(currentSlideEl, {
+    opacity: 0,
+    scale: 0.9,
+    duration: 0.4,
+    ease: "power2.in"
+  });
+  
+  // Cambiar clases activas
+  tl.call(() => {
+    currentSlideEl.classList.remove('active');
+    nextSlideEl.classList.add('active');
+    currentDot.classList.remove('active');
+    nextDot.classList.add('active');
+  });
+  
+  // Animar entrada del nuevo slide
+  tl.fromTo(nextSlideEl, {
+    opacity: 0,
+    scale: 1.1
+  }, {
+    opacity: 1,
+    scale: 1,
+    duration: 0.6,
+    ease: "power2.out"
+  }, "-=0.2");
+  
+  // Animar contenido del slide
+  tl.fromTo(nextSlideEl.querySelector('.slide-content'), {
+    y: 50,
+    opacity: 0
+  }, {
+    y: 0,
+    opacity: 1,
+    duration: 0.4,
+    ease: "power2.out"
+  }, "-=0.3");
+}
+
+// Función para abrir lightbox
+function openLightbox(imageUrl) {
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImage = document.getElementById('lightbox-image');
+  
+  lightboxImage.src = imageUrl;
+  lightbox.classList.remove('hidden');
+  
+  gsap.fromTo(lightbox, {
+    opacity: 0
+  }, {
+    opacity: 1,
+    duration: 0.3,
+    ease: "power2.out"
+  });
+  
+  gsap.fromTo(lightboxImage, {
+    scale: 0.8,
+    opacity: 0
+  }, {
+    scale: 1,
+    opacity: 1,
+    duration: 0.4,
+    ease: "back.out(1.7)"
+  });
+}
+
+// Función para cerrar lightbox
+function closeLightbox() {
+  const lightbox = document.getElementById('lightbox');
+  
+  gsap.to(lightbox, {
+    opacity: 0,
+    duration: 0.3,
+    ease: "power2.in",
+    onComplete: () => {
+      lightbox.classList.add('hidden');
+    }
+  });
+}
+
+// Inicializar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initGallery);
+} else {
+  initGallery();
+}
+</script>

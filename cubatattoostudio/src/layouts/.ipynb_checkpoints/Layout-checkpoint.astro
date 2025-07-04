@@ -5,9 +5,6 @@ export interface Props {
 }
 
 const { title = "Cuba Tattoo Studio", description = "Arte en la piel, contado en cada trazo" } = Astro.props;
-
-// Importar componentes
-import Preloader from '../components/Preloader.astro';
 ---
 
 <!DOCTYPE html>
@@ -26,55 +23,8 @@ import Preloader from '../components/Preloader.astro';
     
     <!-- Google Fonts: Rye para encabezados -->
     <link href="https://fonts.googleapis.com/css2?family=Rye&display=swap" rel="stylesheet" />
-    
-    <!-- Estilos globales para tema oscuro y scroll horizontal -->
-    <style>
-      /* Reset y tema oscuro global */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      
-      html, body {
-        color: #ffffff !important;
-        scroll-behavior: smooth;
-        background: #000000; /* Fondo base negro */
-        min-height: 100vh;
-      }
-      
-      /* Secciones con fondos transparentes para permitir efectos dinámicos */
-      section {
-        color: #ffffff !important;
-        background: transparent !important;
-        position: relative;
-        z-index: 10; /* Asegurar que el contenido esté visible */
-      }
-      
-      /* Scrollbar personalizado */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      
-      ::-webkit-scrollbar-track {
-        background: #000000;
-      }
-      
-      ::-webkit-scrollbar-thumb {
-        background-color: #ffffff;
-        border-radius: 4px;
-      }
-      
-      /* GSAP ScrollTrigger optimizations */
-      .gsap-marker-start, .gsap-marker-end {
-        display: none !important;
-      }
-    </style>
   </head>
   <body class="bg-black text-white scroll-smooth overflow-x-hidden">
-    <!-- Preloader -->
-    <Preloader />
-    
     <!-- Header de navegación fijo -->
     <header class="fixed top-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-md border-b border-white/10">
       <div class="container mx-auto px-6 py-4 flex justify-between items-center">
@@ -117,7 +67,11 @@ import Preloader from '../components/Preloader.astro';
     </nav>
 
     <main>
-      <slot />
+      <div class="viewport-wrapper">
+        <div class="content-scroll">
+          <slot />
+        </div>
+      </div>
     </main>
 
     <!-- Scripts básicos -->
@@ -145,23 +99,30 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 (async () => {
-  console.log('🚀 Inicializando scripts...');
-  
-  // Sistema principal de animaciones GSAP
+  let ScrollSmoother;
   try {
-    const { initScrollAnimations } = await import('../scroll-animations-master.js');
-    initScrollAnimations();
-    console.log('✅ Scroll Animations Master loaded');
+    ScrollSmoother = (await import('gsap/ScrollSmoother')).default;
+    if (ScrollSmoother) {
+      gsap.registerPlugin(ScrollSmoother);
+      ScrollSmoother.create({
+        wrapper: '.viewport-wrapper',
+        content: '.content-scroll',
+        smooth: 1.5,
+        effects: false,
+        normalizeScroll: true,
+        preventDefault: true
+      });
+    }
   } catch (e) {
-    console.warn('scroll-animations-master.js no disponible:', e);
+    // Si no está disponible, continuar sin smooth
   }
-  
-  // Sistema de transiciones de fondo - REACTIVADO GRADUALMENTE
+
+  // Animaciones de scroll centralizadas
   try {
-    const BackgroundTransitionManager = await import('../background-transitions.js');
-    console.log('🌟 Background Transition Manager loaded successfully');
+    const { initScrollAnimations } = await import('../scroll-animations.js');
+    initScrollAnimations();
   } catch (e) {
-    console.warn('background-transitions.js no disponible:', e);
+    // Si no está disponible, continuar sin animaciones
   }
 })();
 </script>

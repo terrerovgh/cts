@@ -1,0 +1,294 @@
+---
+// Componente Preloader con animación tipo GTA VI
+---
+
+<div id="loading-overlay" class="fixed inset-0 z-[9999] bg-black flex items-center justify-center">
+  <div class="preloader-content relative">
+    <!-- Logo animado -->
+    <div class="preloader-logo mb-8">
+      <img src="/assets/logo.png" alt="Cuba Tattoo Studio" class="w-16 h-16 mx-auto logo-spin" />
+    </div>
+    
+    <!-- Texto principal con efecto typewriter -->
+    <div class="preloader-text text-center">
+      <h1 class="text-4xl md:text-6xl font-rye font-bold text-white mb-4 typewriter-text">
+        CUBA TATTOO STUDIO
+      </h1>
+      <p class="text-xl text-gray-300 loading-subtitle">
+        Cargando experiencia...
+      </p>
+    </div>
+    
+    <!-- Barra de progreso -->
+    <div class="progress-container mt-8 w-64 mx-auto">
+      <div class="progress-bar-bg h-1 bg-gray-800 rounded-full overflow-hidden">
+        <div id="progress-fill" class="h-full bg-white rounded-full w-0 transition-all duration-300"></div>
+      </div>
+      <div class="progress-text text-center mt-2 text-sm text-gray-400">
+        <span id="progress-percentage">0%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Sistema de preloader simplificado y robusto
+class PreloaderManager {
+  private overlay: HTMLElement | null;
+  private progressFill: HTMLElement | null;
+  private progressText: HTMLElement | null;
+  private progress: number;
+  private isComplete: boolean;
+
+  constructor() {
+    this.overlay = document.getElementById('loading-overlay');
+    this.progressFill = document.getElementById('progress-fill');
+    this.progressText = document.getElementById('progress-percentage');
+    this.progress = 0;
+    this.isComplete = false;
+    
+    this.init();
+  }
+  
+  init() {
+    console.log('🔄 Preloader iniciado');
+    this.simulateLoading();
+    this.setupEventListeners();
+    this.startAnimations();
+  }
+  
+  simulateLoading() {
+    const duration = 800; // Reducido a menos de 1 segundo para mejor UX
+    const startTime = Date.now();
+    
+    const updateProgress = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min((elapsed / duration) * 100, 100);
+      
+      this.updateProgress(progress);
+      
+      if (progress < 100) {
+        requestAnimationFrame(updateProgress);
+      } else {
+        // Completar inmediatamente cuando llega al 100%
+        this.completeLoading();
+      }
+    };
+    
+    requestAnimationFrame(updateProgress);
+  }
+  
+  updateProgress(value: number) {
+    this.progress = value;
+    if (this.progressFill) {
+      (this.progressFill as HTMLElement).style.width = `${value}%`;
+    }
+    if (this.progressText) {
+      this.progressText.textContent = `${Math.round(value)}%`;
+    }
+  }
+  
+  completeLoading() {
+    if (this.isComplete) return;
+    this.isComplete = true;
+    
+    console.log('✅ Preloader completado');
+    
+    // Usar CSS transitions para animar salida
+    this.animateOutWithCSS();
+  }
+  
+  animateOutWithCSS() {
+    if (!this.overlay) return;
+    
+    // Agregar clase para animación de salida
+    (this.overlay as HTMLElement).style.transition = 'opacity 0.8s ease-out';
+    (this.overlay as HTMLElement).style.opacity = '0';
+    
+    setTimeout(() => {
+      if (this.overlay) {
+        (this.overlay as HTMLElement).style.display = 'none';
+      }
+      document.body.classList.remove('loading');
+      console.log('🎉 Sitio listo');
+      
+      // Disparar evento personalizado para que otros scripts sepan que está listo
+      window.dispatchEvent(new CustomEvent('preloaderComplete'));
+    }, 800);
+  }
+  
+  startAnimations() {
+    // Animaciones CSS simples
+    const logo = document.querySelector('.preloader-logo') as HTMLElement;
+    const text = document.querySelector('.typewriter-text') as HTMLElement;
+    const subtitle = document.querySelector('.loading-subtitle') as HTMLElement;
+    
+    if (logo) {
+      logo.style.animation = 'logoEntrance 1s ease-out forwards';
+    }
+    
+    if (text) {
+      setTimeout(() => {
+        text.style.opacity = '1';
+        text.style.transform = 'translateY(0)';
+      }, 300);
+    }
+    
+    if (subtitle) {
+      setTimeout(() => {
+        subtitle.style.opacity = '1';
+      }, 600);
+    }
+  }
+  
+  setupEventListeners() {
+    // Fallback: forzar completado después de 1.5 segundos (muy reducido)
+    setTimeout(() => {
+      if (!this.isComplete) {
+        console.warn('⚠️ Preloader timeout - forzando completado');
+        this.completeLoading();
+      }
+    }, 1500);
+    
+    // Completar cuando la página esté completamente cargada
+    window.addEventListener('load', () => {
+      if (!this.isComplete) {
+        console.log('📄 Página cargada - completando preloader');
+        this.completeLoading();
+      }
+    });
+    
+    // Completar al hacer clic (para desarrollo) - inmediato
+    this.overlay?.addEventListener('click', () => {
+      console.log('👆 Click detectado - completando preloader inmediatamente');
+      this.completeLoading();
+    });
+  }
+}
+
+// Inicializar preloader cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('🚀 Iniciando preloader...');
+  document.body.classList.add('loading');
+  new PreloaderManager();
+});
+
+// Fallback adicional por si acaso - reducido
+setTimeout(() => {
+  const overlay = document.getElementById('loading-overlay');
+  if (overlay && (overlay as HTMLElement).style.display !== 'none') {
+    console.warn('🔧 Fallback final - removiendo preloader');
+    (overlay as HTMLElement).style.display = 'none';
+    document.body.classList.remove('loading');
+  }
+}, 3000);
+</script>
+
+<style>
+/* Estilos del preloader */
+#loading-overlay {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+  transition: opacity 0.8s ease-out;
+}
+
+.preloader-logo {
+  opacity: 0;
+  transform: scale(0.8) translateY(20px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.typewriter-text {
+  background: linear-gradient(45deg, #ffffff 0%, #ffd700 50%, #ffffff 100%);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShine 3s ease-in-out infinite;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.loading-subtitle {
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+
+@keyframes logoEntrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(20px) rotate(-10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(0deg);
+  }
+}
+
+.logo-spin {
+  animation: logoSpin 2s ease-in-out infinite alternate;
+}
+
+@keyframes logoSpin {
+  0% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(5deg) scale(1.05); }
+}
+
+@keyframes textShine {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+}
+
+.progress-bar-bg {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#progress-fill {
+  background: linear-gradient(90deg, #ffd700, #ffffff);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  transition: width 0.3s ease-out;
+}
+
+/* Bloquear scroll durante loading */
+body.loading {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Cursor para indicar que se puede hacer click */
+#loading-overlay {
+  cursor: pointer;
+}
+
+#loading-overlay::after {
+  content: "Click para continuar";
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.8rem;
+  animation: fadeInOut 2s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .typewriter-text {
+    font-size: 2rem !important;
+  }
+  
+  .progress-container {
+    width: 200px;
+  }
+  
+  #loading-overlay::after {
+    font-size: 0.7rem;
+    bottom: 1rem;
+  }
+}
+</style>

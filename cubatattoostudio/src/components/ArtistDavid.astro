@@ -1,0 +1,24 @@
+---
+import ArtistBase from './ArtistBase.astro';
+
+// Props específicos para David
+const trabajos = [
+  { tipo: 'image' as const, src: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=800&h=800&fit=crop", alt: "Blackwork Clásico" },
+  { tipo: 'video' as const, src: "https://www.w3schools.com/html/mov_bbb.mp4", alt: "Proceso Geométrico" },
+  { tipo: 'image' as const, src: "https://images.unsplash.com/photo-1565058379802-bbe93b2f703a?w=800&h=800&fit=crop", alt: "Blackwork Detallado" },
+  { tipo: 'image' as const, src: "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=800&fit=crop", alt: "Diseño Geométrico" },
+  { tipo: 'video' as const, src: "https://www.w3schools.com/html/mov_bbb.mp4", alt: "Técnica Blackwork" },
+  { tipo: 'image' as const, src: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=800&h=800&fit=crop", alt: "Arte Geométrico" },
+  { tipo: 'image' as const, src: "https://images.unsplash.com/photo-1611501275019-9b5cda994e8d?w=600&h=800&fit=crop", alt: "Blackwork Minimalista" },
+  { tipo: 'video' as const, src: "https://www.w3schools.com/html/mov_bbb.mp4", alt: "Making Of Geométrico" }
+];
+---
+
+<ArtistBase
+  id="david"
+  nombre="David Rodriguez"
+  video="https://www.w3schools.com/html/mov_bbb.mp4"
+  descripcion="Especialista en blackwork y geométrico. 8 años de experiencia creando diseños únicos con líneas precisas y formas arquitectónicas."
+  trabajos={trabajos}
+  accentColor="#8b5cf6"
+/>
