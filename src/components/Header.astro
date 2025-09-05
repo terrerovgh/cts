@@ -1,0 +1,73 @@
+---
+const {} = Astro.props;
+---
+
+<header
+  id="header"
+  class="fixed top-0 left-0 w-full z-50 transition-all duration-300"
+>
+  <nav class="flex items-center justify-between p-4">
+    <div class="flex items-center">
+      <a href="/" class="text-2xl font-bold text-white">Cuba Tattoo Studio</a>
+    </div>
+    <div class="hidden md:flex items-center space-x-4">
+      <a href="#artists" class="text-white hover:text-gray-300">Artists</a>
+      <a href="#services" class="text-white hover:text-gray-300">Services</a>
+      <a href="#gallery" class="text-white hover:text-gray-300">Gallery</a>
+      <a href="#contact" class="text-white hover:text-gray-300">Contact</a>
+    </div>
+    <div class="md:hidden">
+      <button id="menu-btn" class="text-white focus:outline-none">
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+  <div id="mobile-menu" class="hidden md:hidden">
+    <a href="#artists" class="block p-4 text-white hover:bg-gray-800"
+      >Artists</a
+    >
+    <a href="#services" class="block p-4 text-white hover:bg-gray-800"
+      >Services</a
+    >
+    <a href="#gallery" class="block p-4 text-white hover:bg-gray-800"
+      >Gallery</a
+    >
+    <a href="#contact" class="block p-4 text-white hover:bg-gray-800"
+      >Contact</a
+    >
+  </div>
+</header>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const menuBtn = document.getElementById("menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const header = document.getElementById("header");
+
+    if (menuBtn && mobileMenu) {
+      menuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+    }
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 50) {
+        header.classList.add("bg-black/50", "backdrop-blur-lg");
+      } else {
+        header.classList.remove("bg-black/50", "backdrop-blur-lg");
+      }
+    });
+  });
+</script>

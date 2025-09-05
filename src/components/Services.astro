@@ -1,0 +1,22 @@
+---
+import { getEntry } from "astro:content";
+
+const { content } = await getEntry("services", "services");
+const { title, services } = content;
+---
+
+<section id="services" class="py-20 bg-black text-white">
+  <div class="container mx-auto px-4">
+    <h2 class="text-4xl font-bold text-center mb-12">{title}</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      {
+        services.map((service) => (
+          <div class="p-8 rounded-lg bg-black/20 backdrop-blur-lg border border-white/10 liquid-glass">
+            <h3 class="text-2xl font-bold mb-4">{service.name}</h3>
+            <p class="text-gray-300">{service.description}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

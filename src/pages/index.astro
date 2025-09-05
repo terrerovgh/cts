@@ -1,0 +1,29 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import ArtistSection from "../components/ArtistSection.astro";
+import Services from "../components/Services.astro";
+import Gallery from "../components/Gallery.astro";
+import Contact from "../components/Contact.astro";
+import Footer from "../components/Footer.astro";
+import Scroll from "../components/animations/Scroll.astro";
+import { getCollection } from "astro:content";
+
+const artists = await getCollection("artists");
+---
+
+<Layout title="Cuba Tattoo Studio">
+  <Header />
+  <main>
+    <Hero />
+    <div id="artists">
+      {artists.map((artist) => <ArtistSection artist={artist.data} />)}
+    </div>
+    <Services />
+    <Gallery />
+    <Contact />
+  </main>
+  <Footer />
+  <Scroll client:load />
+</Layout>

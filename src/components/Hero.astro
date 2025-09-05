@@ -1,0 +1,22 @@
+---
+const {} = Astro.props;
+---
+
+<section
+  id="hero"
+  class="h-screen flex items-center justify-center text-center bg-black text-white"
+>
+  <div class="z-10">
+    <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-4">
+      Cuba Tattoo Studio
+    </h1>
+    <p class="text-lg md:text-xl text-gray-300">
+      Art that tells your story.
+    </p>
+  </div>
+  <div
+    class="absolute inset-0 bg-black/50"
+    style="background-image: url('/images/hero-bg.jpg'); background-size: cover; background-position: center; opacity: 0.3;"
+  >
+  </div>
+</section>
